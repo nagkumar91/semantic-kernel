@@ -31,10 +31,51 @@ def trace_group_chat_agent_message(operation_name: str):
                 
                 try:
                     if operation_name == "invoke":
+                        # Add interaction span for receiving delegation from manager
+                        message = args[1] if len(args) > 1 else None  # GroupChatRequestMessage
+                        
+                        with tracer.start_as_current_span("agent_receives_delegation") as interaction_span:
+                            interaction_span.set_attributes({
+                                "gen_ai.operation.name": "agent_to_agent_interaction",
+                                "gen_ai.interaction.type": "receive_delegation",
+                                "gen_ai.interaction.source_agent": "Manager",
+                                "gen_ai.interaction.target_agent": agent_actor._agent.name,
+                                "agent.role": getattr(agent_actor._agent, 'role', 'unknown'),
+                                "requested_agent": getattr(message, 'agent_name', 'unknown') if message else 'unknown'
+                            })
+                        
                         start_time = time.time()
                         result = await func(*args, **kwargs)
                         duration = time.time() - start_time
                         span.set_attribute("execution.duration_seconds", duration)
+                        
+                        # Add interaction span for agent responding to manager
+                        with tracer.start_as_current_span("agent_responds_to_manager") as interaction_span:
+                            interaction_span.set_attributes({
+                                "gen_ai.operation.name": "agent_to_agent_interaction",
+                                "gen_ai.interaction.type": "send_response",
+                                "gen_ai.interaction.source_agent": agent_actor._agent.name,
+                                "gen_ai.interaction.target_agent": "Manager",
+                                "agent.role": getattr(agent_actor._agent, 'role', 'unknown'),
+                                "execution.duration_seconds": duration
+                            })
+                        
+                        return result
+                    elif operation_name == "handle_response_message":
+                        # Add interaction span for agent receiving messages from other agents
+                        message = args[1] if len(args) > 1 else None  # GroupChatResponseMessage
+                        
+                        with tracer.start_as_current_span("agent_receives_peer_message") as interaction_span:
+                            interaction_span.set_attributes({
+                                "gen_ai.operation.name": "agent_to_agent_interaction",
+                                "gen_ai.interaction.type": "receive_peer_message",
+                                "gen_ai.interaction.source_agent": getattr(message.body, 'name', 'unknown') if message else 'unknown',
+                                "gen_ai.interaction.target_agent": agent_actor._agent.name,
+                                "message.role": str(message.body.role) if message else 'unknown'
+                            })
+                        
+                        result = await func(*args, **kwargs)
+                        return result
                     else:
                         result = await func(*args, **kwargs)
                     
@@ -72,7 +113,46 @@ def trace_group_chat_manager_message(operation_name: str):
                     span.set_attribute("chat_history.message_count", msg_count)
                 
                 try:
-                    result = await func(*args, **kwargs)
+                    # ENHANCED: Add agent-to-agent interaction detection for key operations
+                    if operation_name == "determine_state_and_take_action":
+                        # Capture state before execution to detect agent selection
+                        chat_history_before = manager_actor._chat_history.model_copy(deep=True)
+                        
+                        result = await func(*args, **kwargs)
+                        
+                        # Add agent-to-agent interaction span for delegation
+                        # We need to detect if an agent was selected by checking if a GroupChatRequestMessage was sent
+                        # Since we can't easily intercept the message sending, we'll add a span that represents the delegation decision
+                        with tracer.start_as_current_span("manager_delegation_decision") as interaction_span:
+                            interaction_span.set_attributes({
+                                "gen_ai.operation.name": "agent_to_agent_interaction",
+                                "gen_ai.interaction.type": "delegation_decision",
+                                "gen_ai.interaction.source_agent": "Manager",
+                                "manager.current_round": current_round,
+                                "chat_history.message_count_before": len(chat_history_before.messages),
+                                "chat_history.message_count_after": len(manager_actor._chat_history.messages)
+                            })
+                        
+                        return result
+                    elif operation_name == "handle_response_message":
+                        # Add agent-to-agent interaction span for receiving agent responses
+                        message = args[1] if len(args) > 1 else None  # GroupChatResponseMessage
+                        
+                        # Create interaction span for receiving agent response
+                        with tracer.start_as_current_span("manager_receives_agent_response") as interaction_span:
+                            interaction_span.set_attributes({
+                                "gen_ai.operation.name": "agent_to_agent_interaction", 
+                                "gen_ai.interaction.type": "receive_response",
+                                "gen_ai.interaction.source_agent": getattr(message.body, 'name', 'unknown') if message else 'unknown',
+                                "gen_ai.interaction.target_agent": "Manager",
+                                "message.role": str(message.body.role) if message else 'unknown'
+                            })
+                        
+                        result = await func(*args, **kwargs)
+                        return result
+                    else:
+                        result = await func(*args, **kwargs)
+                    
                     span.set_status(Status(StatusCode.OK))
                     return result
                 except Exception as e:
@@ -82,7 +162,6 @@ def trace_group_chat_manager_message(operation_name: str):
         wrapper.__group_chat_diagnostics__ = True  # type: ignore
         return wrapper
     return decorator
-
 
 @experimental
 def trace_group_chat_orchestration(operation_name: str):

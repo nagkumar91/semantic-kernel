@@ -109,6 +109,7 @@ class AgentBaseGroupChatManager(GroupChatManager):
         
         with tracer.start_as_current_span("planning_user_input_assessment") as plan_span:
             plan_span.set_attributes({
+                "gen_ai.operation.name": "plan_task",
                 "gen_ai.planning.type": "user_input_assessment",
                 "gen_ai.planning.complexity": "simple", 
                 "gen_ai.planning.stage": "interaction_control",
@@ -185,9 +186,10 @@ class AgentBaseGroupChatManager(GroupChatManager):
         
         with tracer.start_as_current_span("agent_selection_planning") as selection_span:
             selection_span.set_attributes({
-                "gen_ai.planning.type": "agent_selection",
+                "gen_ai.planning.type": "plan_task",
                 "gen_ai.planning.complexity": "moderate",
                 "gen_ai.planning.stage": "agent_coordination", 
+                "gen_ai.operation.name": "plan_task",
                 "agent.selection.total_participants": len(participant_descriptions),
                 "agent.selection.available_agents": list(participant_descriptions.keys()),
                 "agent.selection.conversation_length": len(chat_history.messages)

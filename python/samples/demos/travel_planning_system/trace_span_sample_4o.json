@@ -1,0 +1,4007 @@
+{
+    "data": [
+        {
+            "traceID": "61085bda55888d292283502aafdca1f7",
+            "spans": [
+                {
+                    "traceID": "61085bda55888d292283502aafdca1f7",
+                    "spanID": "7e38ea8aa55cd4fa",
+                    "operationName": "AutoFunctionInvocationLoop",
+                    "references": [
+                        {
+                            "refType": "CHILD_OF",
+                            "traceID": "61085bda55888d292283502aafdca1f7",
+                            "spanID": "496f443d77e359b0"
+                        }
+                    ],
+                    "startTime": 1750692447185773,
+                    "duration": 1146681,
+                    "tags": [
+                        {
+                            "key": "otel.scope.name",
+                            "type": "string",
+                            "value": "semantic_kernel.connectors.ai.chat_completion_client_base"
+                        },
+                        {
+                            "key": "sk.available_functions",
+                            "type": "string",
+                            "value": ""
+                        },
+                        {
+                            "key": "span.kind",
+                            "type": "string",
+                            "value": "internal"
+                        }
+                    ],
+                    "logs": [],
+                    "processID": "p1",
+                    "warnings": null
+                },
+                {
+                    "traceID": "61085bda55888d292283502aafdca1f7",
+                    "spanID": "d46695dd34722922",
+                    "operationName": "agent_runtime publish f7c53bd04cfc432a871a031cb575ccb6.(default)-T",
+                    "references": [
+                        {
+                            "refType": "CHILD_OF",
+                            "traceID": "61085bda55888d292283502aafdca1f7",
+                            "spanID": "925d222cae14e00f"
+                        },
+                        {
+                            "refType": "FOLLOWS_FROM",
+                            "traceID": "61085bda55888d292283502aafdca1f7",
+                            "spanID": "06740f12212eed23"
+                        }
+                    ],
+                    "startTime": 1750692448332880,
+                    "duration": 14748316,
+                    "tags": [
+                        {
+                            "key": "messaging.destination",
+                            "type": "string",
+                            "value": "f7c53bd04cfc432a871a031cb575ccb6.(default)-T"
+                        },
+                        {
+                            "key": "messaging.operation",
+                            "type": "string",
+                            "value": "publish"
+                        },
+                        {
+                            "key": "otel.scope.name",
+                            "type": "string",
+                            "value": "agent_runtime InProcessRuntime"
+                        },
+                        {
+                            "key": "span.kind",
+                            "type": "string",
+                            "value": "producer"
+                        }
+                    ],
+                    "logs": [],
+                    "processID": "p1",
+                    "warnings": null
+                },
+                {
+                    "traceID": "61085bda55888d292283502aafdca1f7",
+                    "spanID": "bdc664c9666153b4",
+                    "operationName": "agent_runtime process flight_agent_f7c53bd04cfc432a871a031cb575ccb6.(default)-A",
+                    "references": [
+                        {
+                            "refType": "CHILD_OF",
+                            "traceID": "61085bda55888d292283502aafdca1f7",
+                            "spanID": "ca22d07e021852d4"
+                        },
+                        {
+                            "refType": "FOLLOWS_FROM",
+                            "traceID": "61085bda55888d292283502aafdca1f7",
+                            "spanID": "2cc3b6a0c0a59ed1"
+                        }
+                    ],
+                    "startTime": 1750692463081247,
+                    "duration": 55,
+                    "tags": [
+                        {
+                            "key": "messaging.destination",
+                            "type": "string",
+                            "value": "flight_agent_f7c53bd04cfc432a871a031cb575ccb6.(default)-A"
+                        },
+                        {
+                            "key": "messaging.operation",
+                            "type": "string",
+                            "value": "process"
+                        },
+                        {
+                            "key": "otel.scope.name",
+                            "type": "string",
+                            "value": "agent_runtime InProcessRuntime"
+                        },
+                        {
+                            "key": "span.kind",
+                            "type": "string",
+                            "value": "consumer"
+                        }
+                    ],
+                    "logs": [],
+                    "processID": "p1",
+                    "warnings": null
+                },
+                {
+                    "traceID": "61085bda55888d292283502aafdca1f7",
+                    "spanID": "7455e45492bfa74d",
+                    "operationName": "chat.completions gpt-4o",
+                    "references": [
+                        {
+                            "refType": "CHILD_OF",
+                            "traceID": "61085bda55888d292283502aafdca1f7",
+                            "spanID": "1ea14e44768f2d86"
+                        }
+                    ],
+                    "startTime": 1750692464717175,
+                    "duration": 1046937,
+                    "tags": [
+                        {
+                            "key": "gen_ai.operation.name",
+                            "type": "string",
+                            "value": "chat.completions"
+                        },
+                        {
+                            "key": "gen_ai.request.model",
+                            "type": "string",
+                            "value": "gpt-4o"
+                        },
+                        {
+                            "key": "gen_ai.response.finish_reason",
+                            "type": "string",
+                            "value": "FinishReason.STOP"
+                        },
+                        {
+                            "key": "gen_ai.response.id",
+                            "type": "string",
+                            "value": "chatcmpl-BldNACd4aaGL4LrfNWbbFbxfyKstK"
+                        },
+                        {
+                            "key": "gen_ai.system",
+                            "type": "string",
+                            "value": "openai"
+                        },
+                        {
+                            "key": "gen_ai.usage.input_tokens",
+                            "type": "int64",
+                            "value": 1326
+                        },
+                        {
+                            "key": "gen_ai.usage.output_tokens",
+                            "type": "int64",
+                            "value": 46
+                        },
+                        {
+                            "key": "otel.scope.name",
+                            "type": "string",
+                            "value": "semantic_kernel.utils.telemetry.model_diagnostics.decorators"
+                        },
+                        {
+                            "key": "server.address",
+                            "type": "string",
+                            "value": "https://ai-naarkalgaihub999971652049.openai.azure.com/openai/deployments/gpt-4o/"
+                        },
+                        {
+                            "key": "span.kind",
+                            "type": "string",
+                            "value": "internal"
+                        }
+                    ],
+                    "logs": [],
+                    "processID": "p1",
+                    "warnings": null
+                },
+                {
+                    "traceID": "61085bda55888d292283502aafdca1f7",
+                    "spanID": "9fd4c5c651b28fb0",
+                    "operationName": "agent_runtime process flight_agent_f7c53bd04cfc432a871a031cb575ccb6.(default)-A",
+                    "references": [
+                        {
+                            "refType": "CHILD_OF",
+                            "traceID": "61085bda55888d292283502aafdca1f7",
+                            "spanID": "aea20dcd9c73c7f3"
+                        },
+                        {
+                            "refType": "FOLLOWS_FROM",
+                            "traceID": "61085bda55888d292283502aafdca1f7",
+                            "spanID": "d322ce8145340d54"
+                        }
+                    ],
+                    "startTime": 1750692445317383,
+                    "duration": 82,
+                    "tags": [
+                        {
+                            "key": "messaging.destination",
+                            "type": "string",
+                            "value": "flight_agent_f7c53bd04cfc432a871a031cb575ccb6.(default)-A"
+                        },
+                        {
+                            "key": "messaging.operation",
+                            "type": "string",
+                            "value": "process"
+                        },
+                        {
+                            "key": "otel.scope.name",
+                            "type": "string",
+                            "value": "agent_runtime InProcessRuntime"
+                        },
+                        {
+                            "key": "span.kind",
+                            "type": "string",
+                            "value": "consumer"
+                        }
+                    ],
+                    "logs": [],
+                    "processID": "p1",
+                    "warnings": null
+                },
+                {
+                    "traceID": "61085bda55888d292283502aafdca1f7",
+                    "spanID": "2d89dc5a43ce2bbf",
+                    "operationName": "agent_runtime ack",
+                    "references": [
+                        {
+                            "refType": "CHILD_OF",
+                            "traceID": "61085bda55888d292283502aafdca1f7",
+                            "spanID": "925d222cae14e00f"
+                        },
+                        {
+                            "refType": "FOLLOWS_FROM",
+                            "traceID": "61085bda55888d292283502aafdca1f7",
+                            "spanID": "b501db103cda6547"
+                        }
+                    ],
+                    "startTime": 1750692448334389,
+                    "duration": 45,
+                    "tags": [
+                        {
+                            "key": "messaging.destination",
+                            "type": "string",
+                            "value": ""
+                        },
+                        {
+                            "key": "messaging.operation",
+                            "type": "string",
+                            "value": "receive"
+                        },
+                        {
+                            "key": "otel.scope.name",
+                            "type": "string",
+                            "value": "agent_runtime InProcessRuntime"
+                        },
+                        {
+                            "key": "span.kind",
+                            "type": "string",
+                            "value": "consumer"
+                        }
+                    ],
+                    "logs": [],
+                    "processID": "p1",
+                    "warnings": null
+                },
+                {
+                    "traceID": "61085bda55888d292283502aafdca1f7",
+                    "spanID": "630322f725112a5a",
+                    "operationName": "chat.completions gpt-4o",
+                    "references": [
+                        {
+                            "refType": "CHILD_OF",
+                            "traceID": "61085bda55888d292283502aafdca1f7",
+                            "spanID": "7e38ea8aa55cd4fa"
+                        }
+                    ],
+                    "startTime": 1750692447185794,
+                    "duration": 1146650,
+                    "tags": [
+                        {
+                            "key": "gen_ai.operation.name",
+                            "type": "string",
+                            "value": "chat.completions"
+                        },
+                        {
+                            "key": "gen_ai.request.model",
+                            "type": "string",
+                            "value": "gpt-4o"
+                        },
+                        {
+                            "key": "gen_ai.response.finish_reason",
+                            "type": "string",
+                            "value": "FinishReason.STOP"
+                        },
+                        {
+                            "key": "gen_ai.response.id",
+                            "type": "string",
+                            "value": "chatcmpl-BldMtsKqKfJVZmbViB9cHqDoZ4DpT"
+                        },
+                        {
+                            "key": "gen_ai.system",
+                            "type": "string",
+                            "value": "openai"
+                        },
+                        {
+                            "key": "gen_ai.usage.input_tokens",
+                            "type": "int64",
+                            "value": 283
+                        },
+                        {
+                            "key": "gen_ai.usage.output_tokens",
+                            "type": "int64",
+                            "value": 56
+                        },
+                        {
+                            "key": "otel.scope.name",
+                            "type": "string",
+                            "value": "semantic_kernel.utils.telemetry.model_diagnostics.decorators"
+                        },
+                        {
+                            "key": "server.address",
+                            "type": "string",
+                            "value": "https://ai-naarkalgaihub999971652049.openai.azure.com/openai/deployments/gpt-4o/"
+                        },
+                        {
+                            "key": "span.kind",
+                            "type": "string",
+                            "value": "internal"
+                        }
+                    ],
+                    "logs": [],
+                    "processID": "p1",
+                    "warnings": null
+                },
+                {
+                    "traceID": "61085bda55888d292283502aafdca1f7",
+                    "spanID": "1824b0a8b77293de",
+                    "operationName": "result_processing",
+                    "references": [
+                        {
+                            "refType": "CHILD_OF",
+                            "traceID": "61085bda55888d292283502aafdca1f7",
+                            "spanID": "a22dc001bf8ecad1"
+                        }
+                    ],
+                    "startTime": 1750692445315774,
+                    "duration": 22821380,
+                    "tags": [
+                        {
+                            "key": "gen_ai.memory.operation_type",
+                            "type": "string",
+                            "value": "read"
+                        },
+                        {
+                            "key": "gen_ai.memory.source_type",
+                            "type": "string",
+                            "value": "task_result"
+                        },
+                        {
+                            "key": "gen_ai.operation.name",
+                            "type": "string",
+                            "value": "memory_operation"
+                        },
+                        {
+                            "key": "memory.result_retrieved",
+                            "type": "bool",
+                            "value": true
+                        },
+                        {
+                            "key": "otel.scope.name",
+                            "type": "string",
+                            "value": "__main__"
+                        },
+                        {
+                            "key": "result.length",
+                            "type": "int64",
+                            "value": 486
+                        },
+                        {
+                            "key": "result.success",
+                            "type": "bool",
+                            "value": true
+                        },
+                        {
+                            "key": "span.kind",
+                            "type": "string",
+                            "value": "internal"
+                        }
+                    ],
+                    "logs": [],
+                    "processID": "p1",
+                    "warnings": null
+                },
+                {
+                    "traceID": "61085bda55888d292283502aafdca1f7",
+                    "spanID": "6483b66d6200b4bc",
+                    "operationName": "group_chat.manager.determine_state_and_take_action",
+                    "references": [
+                        {
+                            "refType": "CHILD_OF",
+                            "traceID": "61085bda55888d292283502aafdca1f7",
+                            "spanID": "e212bdc72b47ab57"
+                        }
+                    ],
+                    "startTime": 1750692463081435,
+                    "duration": 5055657,
+                    "tags": [
+                        {
+                            "key": "chat_history.message_count",
+                            "type": "int64",
+                            "value": 3
+                        },
+                        {
+                            "key": "manager.current_round",
+                            "type": "int64",
+                            "value": 1
+                        },
+                        {
+                            "key": "manager_type",
+                            "type": "string",
+                            "value": "AgentBaseGroupChatManager"
+                        },
+                        {
+                            "key": "operation",
+                            "type": "string",
+                            "value": "determine_state_and_take_action"
+                        },
+                        {
+                            "key": "otel.scope.name",
+                            "type": "string",
+                            "value": "semantic_kernel.utils.telemetry.group_chat_diagnostics.decorators"
+                        },
+                        {
+                            "key": "otel.status_code",
+                            "type": "string",
+                            "value": "OK"
+                        },
+                        {
+                            "key": "span.kind",
+                            "type": "string",
+                            "value": "internal"
+                        }
+                    ],
+                    "logs": [],
+                    "processID": "p1",
+                    "warnings": null
+                },
+                {
+                    "traceID": "61085bda55888d292283502aafdca1f7",
+                    "spanID": "8b48e9ea4c951617",
+                    "operationName": "group_chat.agent.invoke",
+                    "references": [
+                        {
+                            "refType": "CHILD_OF",
+                            "traceID": "61085bda55888d292283502aafdca1f7",
+                            "spanID": "0c0408e8c9e2ecb7"
+                        }
+                    ],
+                    "startTime": 1750692448334207,
+                    "duration": 35,
+                    "tags": [
+                        {
+                            "key": "agent.id",
+                            "type": "string",
+                            "value": "hotel_agent_f7c53bd04cfc432a871a031cb575ccb6/default"
+                        },
+                        {
+                            "key": "agent.name",
+                            "type": "string",
+                            "value": "hotel_agent"
+                        },
+                        {
+                            "key": "execution.duration_seconds",
+                            "type": "float64",
+                            "value": 9.5367431640625e-7
+                        },
+                        {
+                            "key": "operation",
+                            "type": "string",
+                            "value": "invoke"
+                        },
+                        {
+                            "key": "otel.scope.name",
+                            "type": "string",
+                            "value": "semantic_kernel.utils.telemetry.group_chat_diagnostics.decorators"
+                        },
+                        {
+                            "key": "otel.status_code",
+                            "type": "string",
+                            "value": "OK"
+                        },
+                        {
+                            "key": "span.kind",
+                            "type": "string",
+                            "value": "internal"
+                        }
+                    ],
+                    "logs": [],
+                    "processID": "p1",
+                    "warnings": null
+                },
+                {
+                    "traceID": "61085bda55888d292283502aafdca1f7",
+                    "spanID": "09da4117e66688ab",
+                    "operationName": "group_chat.orchestration.start",
+                    "references": [
+                        {
+                            "refType": "CHILD_OF",
+                            "traceID": "61085bda55888d292283502aafdca1f7",
+                            "spanID": "a22dc001bf8ecad1"
+                        }
+                    ],
+                    "startTime": 1750692445315873,
+                    "duration": 3018637,
+                    "tags": [
+                        {
+                            "key": "manager_type",
+                            "type": "string",
+                            "value": "AgentBaseGroupChatManager"
+                        },
+                        {
+                            "key": "operation",
+                            "type": "string",
+                            "value": "start"
+                        },
+                        {
+                            "key": "otel.scope.name",
+                            "type": "string",
+                            "value": "semantic_kernel.utils.telemetry.group_chat_diagnostics.decorators"
+                        },
+                        {
+                            "key": "otel.status_code",
+                            "type": "string",
+                            "value": "OK"
+                        },
+                        {
+                            "key": "participant_count",
+                            "type": "int64",
+                            "value": 3
+                        },
+                        {
+                            "key": "participants",
+                            "type": "string",
+                            "value": "planner,flight_agent,hotel_agent"
+                        },
+                        {
+                            "key": "span.kind",
+                            "type": "string",
+                            "value": "internal"
+                        }
+                    ],
+                    "logs": [],
+                    "processID": "p1",
+                    "warnings": null
+                },
+                {
+                    "traceID": "61085bda55888d292283502aafdca1f7",
+                    "spanID": "09e27f78485cce5c",
+                    "operationName": "agent_runtime create GroupChatManagerActor_f7c53bd04cfc432a871a031cb575ccb6.(default)-A",
+                    "references": [
+                        {
+                            "refType": "CHILD_OF",
+                            "traceID": "61085bda55888d292283502aafdca1f7",
+                            "spanID": "09da4117e66688ab"
+                        }
+                    ],
+                    "startTime": 1750692445318184,
+                    "duration": 3016314,
+                    "tags": [
+                        {
+                            "key": "messaging.destination",
+                            "type": "string",
+                            "value": "GroupChatManagerActor_f7c53bd04cfc432a871a031cb575ccb6.(default)-A"
+                        },
+                        {
+                            "key": "messaging.message.type",
+                            "type": "string",
+                            "value": "GroupChatStartMessage"
+                        },
+                        {
+                            "key": "messaging.operation",
+                            "type": "string",
+                            "value": "create"
+                        },
+                        {
+                            "key": "otel.scope.name",
+                            "type": "string",
+                            "value": "agent_runtime InProcessRuntime"
+                        },
+                        {
+                            "key": "span.kind",
+                            "type": "string",
+                            "value": "producer"
+                        }
+                    ],
+                    "logs": [],
+                    "processID": "p1",
+                    "warnings": null
+                },
+                {
+                    "traceID": "61085bda55888d292283502aafdca1f7",
+                    "spanID": "7a604124871020c2",
+                    "operationName": "group_chat.agent.invoke",
+                    "references": [
+                        {
+                            "refType": "CHILD_OF",
+                            "traceID": "61085bda55888d292283502aafdca1f7",
+                            "spanID": "d9e059f271ad9c79"
+                        }
+                    ],
+                    "startTime": 1750692448334060,
+                    "duration": 9,
+                    "tags": [
+                        {
+                            "key": "agent.id",
+                            "type": "string",
+                            "value": "flight_agent_f7c53bd04cfc432a871a031cb575ccb6/default"
+                        },
+                        {
+                            "key": "agent.name",
+                            "type": "string",
+                            "value": "flight_agent"
+                        },
+                        {
+                            "key": "execution.duration_seconds",
+                            "type": "float64",
+                            "value": 9.5367431640625e-7
+                        },
+                        {
+                            "key": "operation",
+                            "type": "string",
+                            "value": "invoke"
+                        },
+                        {
+                            "key": "otel.scope.name",
+                            "type": "string",
+                            "value": "semantic_kernel.utils.telemetry.group_chat_diagnostics.decorators"
+                        },
+                        {
+                            "key": "otel.status_code",
+                            "type": "string",
+                            "value": "OK"
+                        },
+                        {
+                            "key": "span.kind",
+                            "type": "string",
+                            "value": "internal"
+                        }
+                    ],
+                    "logs": [],
+                    "processID": "p1",
+                    "warnings": null
+                },
+                {
+                    "traceID": "61085bda55888d292283502aafdca1f7",
+                    "spanID": "b501db103cda6547",
+                    "operationName": "agent_runtime send GroupChatManagerActor_f7c53bd04cfc432a871a031cb575ccb6.(default)-A",
+                    "references": [
+                        {
+                            "refType": "CHILD_OF",
+                            "traceID": "61085bda55888d292283502aafdca1f7",
+                            "spanID": "925d222cae14e00f"
+                        },
+                        {
+                            "refType": "FOLLOWS_FROM",
+                            "traceID": "61085bda55888d292283502aafdca1f7",
+                            "spanID": "09e27f78485cce5c"
+                        }
+                    ],
+                    "startTime": 1750692445318314,
+                    "duration": 3014469,
+                    "tags": [
+                        {
+                            "key": "messaging.destination",
+                            "type": "string",
+                            "value": "GroupChatManagerActor_f7c53bd04cfc432a871a031cb575ccb6.(default)-A"
+                        },
+                        {
+                            "key": "messaging.operation",
+                            "type": "string",
+                            "value": "publish"
+                        },
+                        {
+                            "key": "otel.scope.name",
+                            "type": "string",
+                            "value": "agent_runtime InProcessRuntime"
+                        },
+                        {
+                            "key": "span.kind",
+                            "type": "string",
+                            "value": "producer"
+                        }
+                    ],
+                    "logs": [],
+                    "processID": "p1",
+                    "warnings": null
+                },
+                {
+                    "traceID": "61085bda55888d292283502aafdca1f7",
+                    "spanID": "c153cf0554da8bda",
+                    "operationName": "execute_tool PlanningPlugin-search_flights",
+                    "references": [
+                        {
+                            "refType": "CHILD_OF",
+                            "traceID": "61085bda55888d292283502aafdca1f7",
+                            "spanID": "81037d45148b5e87"
+                        }
+                    ],
+                    "startTime": 1750692456650485,
+                    "duration": 299,
+                    "tags": [
+                        {
+                            "key": "gen_ai.operation.name",
+                            "type": "string",
+                            "value": "execute_tool"
+                        },
+                        {
+                            "key": "gen_ai.tool.call.id",
+                            "type": "string",
+                            "value": "call_RcfjLO6NLpujsVY2leeSJA0d"
+                        },
+                        {
+                            "key": "gen_ai.tool.description",
+                            "type": "string",
+                            "value": "Search for available flights."
+                        },
+                        {
+                            "key": "gen_ai.tool.name",
+                            "type": "string",
+                            "value": "PlanningPlugin-search_flights"
+                        },
+                        {
+                            "key": "otel.scope.name",
+                            "type": "string",
+                            "value": "semantic_kernel.functions.kernel_function"
+                        },
+                        {
+                            "key": "span.kind",
+                            "type": "string",
+                            "value": "internal"
+                        }
+                    ],
+                    "logs": [],
+                    "processID": "p1",
+                    "warnings": null
+                },
+                {
+                    "traceID": "61085bda55888d292283502aafdca1f7",
+                    "spanID": "a773009961ad0657",
+                    "operationName": "group_chat.agent.handle_response_message",
+                    "references": [
+                        {
+                            "refType": "CHILD_OF",
+                            "traceID": "61085bda55888d292283502aafdca1f7",
+                            "spanID": "bdc664c9666153b4"
+                        }
+                    ],
+                    "startTime": 1750692463081263,
+                    "duration": 34,
+                    "tags": [
+                        {
+                            "key": "agent.id",
+                            "type": "string",
+                            "value": "flight_agent_f7c53bd04cfc432a871a031cb575ccb6/default"
+                        },
+                        {
+                            "key": "agent.name",
+                            "type": "string",
+                            "value": "flight_agent"
+                        },
+                        {
+                            "key": "operation",
+                            "type": "string",
+                            "value": "handle_response_message"
+                        },
+                        {
+                            "key": "otel.scope.name",
+                            "type": "string",
+                            "value": "semantic_kernel.utils.telemetry.group_chat_diagnostics.decorators"
+                        },
+                        {
+                            "key": "otel.status_code",
+                            "type": "string",
+                            "value": "OK"
+                        },
+                        {
+                            "key": "span.kind",
+                            "type": "string",
+                            "value": "internal"
+                        }
+                    ],
+                    "logs": [],
+                    "processID": "p1",
+                    "warnings": null
+                },
+                {
+                    "traceID": "61085bda55888d292283502aafdca1f7",
+                    "spanID": "a096496c4969c9d8",
+                    "operationName": "invoke_agent Manager",
+                    "references": [
+                        {
+                            "refType": "CHILD_OF",
+                            "traceID": "61085bda55888d292283502aafdca1f7",
+                            "spanID": "7f1e8a5d6ede7c91"
+                        }
+                    ],
+                    "startTime": 1750692465784565,
+                    "duration": 2351948,
+                    "tags": [
+                        {
+                            "key": "gen_ai.agent.description",
+                            "type": "string",
+                            "value": "The manager of the group chat, responsible for coordinating the agents."
+                        },
+                        {
+                            "key": "gen_ai.agent.id",
+                            "type": "string",
+                            "value": "63bb98a7-6b73-43b1-8303-260d770bae22"
+                        },
+                        {
+                            "key": "gen_ai.agent.name",
+                            "type": "string",
+                            "value": "Manager"
+                        },
+                        {
+                            "key": "gen_ai.operation.name",
+                            "type": "string",
+                            "value": "invoke_agent"
+                        },
+                        {
+                            "key": "otel.scope.name",
+                            "type": "string",
+                            "value": "semantic_kernel.utils.telemetry.agent_diagnostics.decorators"
+                        },
+                        {
+                            "key": "span.kind",
+                            "type": "string",
+                            "value": "internal"
+                        }
+                    ],
+                    "logs": [],
+                    "processID": "p1",
+                    "warnings": null
+                },
+                {
+                    "traceID": "61085bda55888d292283502aafdca1f7",
+                    "spanID": "e212bdc72b47ab57",
+                    "operationName": "group_chat.manager.handle_response_message",
+                    "references": [
+                        {
+                            "refType": "CHILD_OF",
+                            "traceID": "61085bda55888d292283502aafdca1f7",
+                            "spanID": "00ded8a1e8891c9f"
+                        }
+                    ],
+                    "startTime": 1750692463081405,
+                    "duration": 5055692,
+                    "tags": [
+                        {
+                            "key": "chat_history.message_count",
+                            "type": "int64",
+                            "value": 1
+                        },
+                        {
+                            "key": "manager.current_round",
+                            "type": "int64",
+                            "value": 1
+                        },
+                        {
+                            "key": "manager_type",
+                            "type": "string",
+                            "value": "AgentBaseGroupChatManager"
+                        },
+                        {
+                            "key": "operation",
+                            "type": "string",
+                            "value": "handle_response_message"
+                        },
+                        {
+                            "key": "otel.scope.name",
+                            "type": "string",
+                            "value": "semantic_kernel.utils.telemetry.group_chat_diagnostics.decorators"
+                        },
+                        {
+                            "key": "otel.status_code",
+                            "type": "string",
+                            "value": "OK"
+                        },
+                        {
+                            "key": "span.kind",
+                            "type": "string",
+                            "value": "internal"
+                        }
+                    ],
+                    "logs": [],
+                    "processID": "p1",
+                    "warnings": null
+                },
+                {
+                    "traceID": "61085bda55888d292283502aafdca1f7",
+                    "spanID": "9eabd097fac5c3c6",
+                    "operationName": "execute_tool PlanningPlugin-search_hotels",
+                    "references": [
+                        {
+                            "refType": "CHILD_OF",
+                            "traceID": "61085bda55888d292283502aafdca1f7",
+                            "spanID": "81037d45148b5e87"
+                        }
+                    ],
+                    "startTime": 1750692456650974,
+                    "duration": 205,
+                    "tags": [
+                        {
+                            "key": "gen_ai.operation.name",
+                            "type": "string",
+                            "value": "execute_tool"
+                        },
+                        {
+                            "key": "gen_ai.tool.call.id",
+                            "type": "string",
+                            "value": "call_A9O3JjBMEldBFK0ISCd10DFb"
+                        },
+                        {
+                            "key": "gen_ai.tool.description",
+                            "type": "string",
+                            "value": "Search for available hotels."
+                        },
+                        {
+                            "key": "gen_ai.tool.name",
+                            "type": "string",
+                            "value": "PlanningPlugin-search_hotels"
+                        },
+                        {
+                            "key": "otel.scope.name",
+                            "type": "string",
+                            "value": "semantic_kernel.functions.kernel_function"
+                        },
+                        {
+                            "key": "span.kind",
+                            "type": "string",
+                            "value": "internal"
+                        }
+                    ],
+                    "logs": [],
+                    "processID": "p1",
+                    "warnings": null
+                },
+                {
+                    "traceID": "61085bda55888d292283502aafdca1f7",
+                    "spanID": "092f630023c058e3",
+                    "operationName": "invoke_agent Manager",
+                    "references": [
+                        {
+                            "refType": "CHILD_OF",
+                            "traceID": "61085bda55888d292283502aafdca1f7",
+                            "spanID": "e45cc8c4dd7ed32c"
+                        }
+                    ],
+                    "startTime": 1750692463094476,
+                    "duration": 1606897,
+                    "tags": [
+                        {
+                            "key": "gen_ai.agent.description",
+                            "type": "string",
+                            "value": "The manager of the group chat, responsible for coordinating the agents."
+                        },
+                        {
+                            "key": "gen_ai.agent.id",
+                            "type": "string",
+                            "value": "63bb98a7-6b73-43b1-8303-260d770bae22"
+                        },
+                        {
+                            "key": "gen_ai.agent.name",
+                            "type": "string",
+                            "value": "Manager"
+                        },
+                        {
+                            "key": "gen_ai.operation.name",
+                            "type": "string",
+                            "value": "invoke_agent"
+                        },
+                        {
+                            "key": "otel.scope.name",
+                            "type": "string",
+                            "value": "semantic_kernel.utils.telemetry.agent_diagnostics.decorators"
+                        },
+                        {
+                            "key": "span.kind",
+                            "type": "string",
+                            "value": "internal"
+                        }
+                    ],
+                    "logs": [],
+                    "processID": "p1",
+                    "warnings": null
+                },
+                {
+                    "traceID": "61085bda55888d292283502aafdca1f7",
+                    "spanID": "d0ea60f19133210b",
+                    "operationName": "agent_runtime send hotel_agent_f7c53bd04cfc432a871a031cb575ccb6.(default)-A",
+                    "references": [
+                        {
+                            "refType": "CHILD_OF",
+                            "traceID": "61085bda55888d292283502aafdca1f7",
+                            "spanID": "925d222cae14e00f"
+                        },
+                        {
+                            "refType": "FOLLOWS_FROM",
+                            "traceID": "61085bda55888d292283502aafdca1f7",
+                            "spanID": "93a07fbb93e9465f"
+                        }
+                    ],
+                    "startTime": 1750692445317560,
+                    "duration": 169,
+                    "tags": [
+                        {
+                            "key": "messaging.destination",
+                            "type": "string",
+                            "value": "hotel_agent_f7c53bd04cfc432a871a031cb575ccb6.(default)-A"
+                        },
+                        {
+                            "key": "messaging.operation",
+                            "type": "string",
+                            "value": "publish"
+                        },
+                        {
+                            "key": "otel.scope.name",
+                            "type": "string",
+                            "value": "agent_runtime InProcessRuntime"
+                        },
+                        {
+                            "key": "span.kind",
+                            "type": "string",
+                            "value": "producer"
+                        }
+                    ],
+                    "logs": [],
+                    "processID": "p1",
+                    "warnings": null
+                },
+                {
+                    "traceID": "61085bda55888d292283502aafdca1f7",
+                    "spanID": "d9e059f271ad9c79",
+                    "operationName": "agent_runtime process flight_agent_f7c53bd04cfc432a871a031cb575ccb6.(default)-A",
+                    "references": [
+                        {
+                            "refType": "CHILD_OF",
+                            "traceID": "61085bda55888d292283502aafdca1f7",
+                            "spanID": "d46695dd34722922"
+                        },
+                        {
+                            "refType": "FOLLOWS_FROM",
+                            "traceID": "61085bda55888d292283502aafdca1f7",
+                            "spanID": "06740f12212eed23"
+                        }
+                    ],
+                    "startTime": 1750692448334045,
+                    "duration": 30,
+                    "tags": [
+                        {
+                            "key": "messaging.destination",
+                            "type": "string",
+                            "value": "flight_agent_f7c53bd04cfc432a871a031cb575ccb6.(default)-A"
+                        },
+                        {
+                            "key": "messaging.operation",
+                            "type": "string",
+                            "value": "process"
+                        },
+                        {
+                            "key": "otel.scope.name",
+                            "type": "string",
+                            "value": "agent_runtime InProcessRuntime"
+                        },
+                        {
+                            "key": "span.kind",
+                            "type": "string",
+                            "value": "consumer"
+                        }
+                    ],
+                    "logs": [],
+                    "processID": "p1",
+                    "warnings": null
+                },
+                {
+                    "traceID": "61085bda55888d292283502aafdca1f7",
+                    "spanID": "5cbdd2c75d7860af",
+                    "operationName": "chat.completions gpt-4o",
+                    "references": [
+                        {
+                            "refType": "CHILD_OF",
+                            "traceID": "61085bda55888d292283502aafdca1f7",
+                            "spanID": "85a488266c108ee0"
+                        }
+                    ],
+                    "startTime": 1750692463094690,
+                    "duration": 1606627,
+                    "tags": [
+                        {
+                            "key": "gen_ai.operation.name",
+                            "type": "string",
+                            "value": "chat.completions"
+                        },
+                        {
+                            "key": "gen_ai.request.model",
+                            "type": "string",
+                            "value": "gpt-4o"
+                        },
+                        {
+                            "key": "gen_ai.response.finish_reason",
+                            "type": "string",
+                            "value": "FinishReason.STOP"
+                        },
+                        {
+                            "key": "gen_ai.response.id",
+                            "type": "string",
+                            "value": "chatcmpl-BldN9qBQEyLZpRdo6Zr1LxUdXb88w"
+                        },
+                        {
+                            "key": "gen_ai.system",
+                            "type": "string",
+                            "value": "openai"
+                        },
+                        {
+                            "key": "gen_ai.usage.input_tokens",
+                            "type": "int64",
+                            "value": 1327
+                        },
+                        {
+                            "key": "gen_ai.usage.output_tokens",
+                            "type": "int64",
+                            "value": 45
+                        },
+                        {
+                            "key": "otel.scope.name",
+                            "type": "string",
+                            "value": "semantic_kernel.utils.telemetry.model_diagnostics.decorators"
+                        },
+                        {
+                            "key": "server.address",
+                            "type": "string",
+                            "value": "https://ai-naarkalgaihub999971652049.openai.azure.com/openai/deployments/gpt-4o/"
+                        },
+                        {
+                            "key": "span.kind",
+                            "type": "string",
+                            "value": "internal"
+                        }
+                    ],
+                    "logs": [],
+                    "processID": "p1",
+                    "warnings": null
+                },
+                {
+                    "traceID": "61085bda55888d292283502aafdca1f7",
+                    "spanID": "85a488266c108ee0",
+                    "operationName": "AutoFunctionInvocationLoop",
+                    "references": [
+                        {
+                            "refType": "CHILD_OF",
+                            "traceID": "61085bda55888d292283502aafdca1f7",
+                            "spanID": "092f630023c058e3"
+                        }
+                    ],
+                    "startTime": 1750692463094666,
+                    "duration": 1606660,
+                    "tags": [
+                        {
+                            "key": "otel.scope.name",
+                            "type": "string",
+                            "value": "semantic_kernel.connectors.ai.chat_completion_client_base"
+                        },
+                        {
+                            "key": "sk.available_functions",
+                            "type": "string",
+                            "value": ""
+                        },
+                        {
+                            "key": "span.kind",
+                            "type": "string",
+                            "value": "internal"
+                        }
+                    ],
+                    "logs": [],
+                    "processID": "p1",
+                    "warnings": null
+                },
+                {
+                    "traceID": "61085bda55888d292283502aafdca1f7",
+                    "spanID": "6c132d1d512a5878",
+                    "operationName": "main",
+                    "references": [],
+                    "startTime": 1750692445207418,
+                    "duration": 22929895,
+                    "tags": [
+                        {
+                            "key": "otel.scope.name",
+                            "type": "string",
+                            "value": "samples.demos.travel_planning_system.observability"
+                        },
+                        {
+                            "key": "span.kind",
+                            "type": "string",
+                            "value": "internal"
+                        }
+                    ],
+                    "logs": [],
+                    "processID": "p1",
+                    "warnings": null
+                },
+                {
+                    "traceID": "61085bda55888d292283502aafdca1f7",
+                    "spanID": "6f98ead8e1f2c9ef",
+                    "operationName": "group_chat.agent.handle_start_message",
+                    "references": [
+                        {
+                            "refType": "CHILD_OF",
+                            "traceID": "61085bda55888d292283502aafdca1f7",
+                            "spanID": "c3839ac459a0047c"
+                        }
+                    ],
+                    "startTime": 1750692445317675,
+                    "duration": 33,
+                    "tags": [
+                        {
+                            "key": "agent.id",
+                            "type": "string",
+                            "value": "hotel_agent_f7c53bd04cfc432a871a031cb575ccb6/default"
+                        },
+                        {
+                            "key": "agent.name",
+                            "type": "string",
+                            "value": "hotel_agent"
+                        },
+                        {
+                            "key": "operation",
+                            "type": "string",
+                            "value": "handle_start_message"
+                        },
+                        {
+                            "key": "otel.scope.name",
+                            "type": "string",
+                            "value": "semantic_kernel.utils.telemetry.group_chat_diagnostics.decorators"
+                        },
+                        {
+                            "key": "otel.status_code",
+                            "type": "string",
+                            "value": "OK"
+                        },
+                        {
+                            "key": "span.kind",
+                            "type": "string",
+                            "value": "internal"
+                        }
+                    ],
+                    "logs": [],
+                    "processID": "p1",
+                    "warnings": null
+                },
+                {
+                    "traceID": "61085bda55888d292283502aafdca1f7",
+                    "spanID": "536046bfc3597520",
+                    "operationName": "streaming_message_final",
+                    "references": [
+                        {
+                            "refType": "CHILD_OF",
+                            "traceID": "61085bda55888d292283502aafdca1f7",
+                            "spanID": "81037d45148b5e87"
+                        }
+                    ],
+                    "startTime": 1750692456651791,
+                    "duration": 10,
+                    "tags": [
+                        {
+                            "key": "gen_ai.memory.operation_type",
+                            "type": "string",
+                            "value": "write"
+                        },
+                        {
+                            "key": "gen_ai.memory.source_type",
+                            "type": "string",
+                            "value": "streaming_response"
+                        },
+                        {
+                            "key": "gen_ai.operation.name",
+                            "type": "string",
+                            "value": "memory_operation"
+                        },
+                        {
+                            "key": "message.agent_name",
+                            "type": "string",
+                            "value": "planner"
+                        },
+                        {
+                            "key": "message.content_length",
+                            "type": "int64",
+                            "value": 0
+                        },
+                        {
+                            "key": "message.processing_complete",
+                            "type": "bool",
+                            "value": true
+                        },
+                        {
+                            "key": "otel.scope.name",
+                            "type": "string",
+                            "value": "__main__"
+                        },
+                        {
+                            "key": "span.kind",
+                            "type": "string",
+                            "value": "internal"
+                        }
+                    ],
+                    "logs": [],
+                    "processID": "p1",
+                    "warnings": null
+                },
+                {
+                    "traceID": "61085bda55888d292283502aafdca1f7",
+                    "spanID": "2cc3b6a0c0a59ed1",
+                    "operationName": "agent_runtime create f7c53bd04cfc432a871a031cb575ccb6.(default)-T",
+                    "references": [
+                        {
+                            "refType": "CHILD_OF",
+                            "traceID": "61085bda55888d292283502aafdca1f7",
+                            "spanID": "6d4fd5db9c565240"
+                        }
+                    ],
+                    "startTime": 1750692463074161,
+                    "duration": 6768,
+                    "tags": [
+                        {
+                            "key": "messaging.destination",
+                            "type": "string",
+                            "value": "f7c53bd04cfc432a871a031cb575ccb6.(default)-T"
+                        },
+                        {
+                            "key": "messaging.message.type",
+                            "type": "string",
+                            "value": "GroupChatResponseMessage"
+                        },
+                        {
+                            "key": "messaging.operation",
+                            "type": "string",
+                            "value": "create"
+                        },
+                        {
+                            "key": "otel.scope.name",
+                            "type": "string",
+                            "value": "agent_runtime InProcessRuntime"
+                        },
+                        {
+                            "key": "span.kind",
+                            "type": "string",
+                            "value": "producer"
+                        }
+                    ],
+                    "logs": [],
+                    "processID": "p1",
+                    "warnings": null
+                },
+                {
+                    "traceID": "61085bda55888d292283502aafdca1f7",
+                    "spanID": "00ded8a1e8891c9f",
+                    "operationName": "agent_runtime process GroupChatManagerActor_f7c53bd04cfc432a871a031cb575ccb6.(default)-A",
+                    "references": [
+                        {
+                            "refType": "CHILD_OF",
+                            "traceID": "61085bda55888d292283502aafdca1f7",
+                            "spanID": "ca22d07e021852d4"
+                        },
+                        {
+                            "refType": "FOLLOWS_FROM",
+                            "traceID": "61085bda55888d292283502aafdca1f7",
+                            "spanID": "2cc3b6a0c0a59ed1"
+                        }
+                    ],
+                    "startTime": 1750692463081390,
+                    "duration": 5055713,
+                    "tags": [
+                        {
+                            "key": "messaging.destination",
+                            "type": "string",
+                            "value": "GroupChatManagerActor_f7c53bd04cfc432a871a031cb575ccb6.(default)-A"
+                        },
+                        {
+                            "key": "messaging.operation",
+                            "type": "string",
+                            "value": "process"
+                        },
+                        {
+                            "key": "otel.scope.name",
+                            "type": "string",
+                            "value": "agent_runtime InProcessRuntime"
+                        },
+                        {
+                            "key": "span.kind",
+                            "type": "string",
+                            "value": "consumer"
+                        }
+                    ],
+                    "logs": [],
+                    "processID": "p1",
+                    "warnings": null
+                },
+                {
+                    "traceID": "61085bda55888d292283502aafdca1f7",
+                    "spanID": "fc0f1a2f1974505b",
+                    "operationName": "agent_runtime send planner_f7c53bd04cfc432a871a031cb575ccb6.(default)-A",
+                    "references": [
+                        {
+                            "refType": "CHILD_OF",
+                            "traceID": "61085bda55888d292283502aafdca1f7",
+                            "spanID": "925d222cae14e00f"
+                        },
+                        {
+                            "refType": "FOLLOWS_FROM",
+                            "traceID": "61085bda55888d292283502aafdca1f7",
+                            "spanID": "d6d9b9fb1a14a2df"
+                        }
+                    ],
+                    "startTime": 1750692445316650,
+                    "duration": 485,
+                    "tags": [
+                        {
+                            "key": "messaging.destination",
+                            "type": "string",
+                            "value": "planner_f7c53bd04cfc432a871a031cb575ccb6.(default)-A"
+                        },
+                        {
+                            "key": "messaging.operation",
+                            "type": "string",
+                            "value": "publish"
+                        },
+                        {
+                            "key": "otel.scope.name",
+                            "type": "string",
+                            "value": "agent_runtime InProcessRuntime"
+                        },
+                        {
+                            "key": "span.kind",
+                            "type": "string",
+                            "value": "producer"
+                        }
+                    ],
+                    "logs": [],
+                    "processID": "p1",
+                    "warnings": null
+                },
+                {
+                    "traceID": "61085bda55888d292283502aafdca1f7",
+                    "spanID": "93a07fbb93e9465f",
+                    "operationName": "agent_runtime create hotel_agent_f7c53bd04cfc432a871a031cb575ccb6.(default)-A",
+                    "references": [
+                        {
+                            "refType": "CHILD_OF",
+                            "traceID": "61085bda55888d292283502aafdca1f7",
+                            "spanID": "09da4117e66688ab"
+                        }
+                    ],
+                    "startTime": 1750692445316496,
+                    "duration": 1593,
+                    "tags": [
+                        {
+                            "key": "messaging.destination",
+                            "type": "string",
+                            "value": "hotel_agent_f7c53bd04cfc432a871a031cb575ccb6.(default)-A"
+                        },
+                        {
+                            "key": "messaging.message.type",
+                            "type": "string",
+                            "value": "GroupChatStartMessage"
+                        },
+                        {
+                            "key": "messaging.operation",
+                            "type": "string",
+                            "value": "create"
+                        },
+                        {
+                            "key": "otel.scope.name",
+                            "type": "string",
+                            "value": "agent_runtime InProcessRuntime"
+                        },
+                        {
+                            "key": "span.kind",
+                            "type": "string",
+                            "value": "producer"
+                        }
+                    ],
+                    "logs": [],
+                    "processID": "p1",
+                    "warnings": null
+                },
+                {
+                    "traceID": "61085bda55888d292283502aafdca1f7",
+                    "spanID": "e28180561a9c4de0",
+                    "operationName": "group_chat.agent.handle_response_message",
+                    "references": [
+                        {
+                            "refType": "CHILD_OF",
+                            "traceID": "61085bda55888d292283502aafdca1f7",
+                            "spanID": "2aa29b0487a7afe8"
+                        }
+                    ],
+                    "startTime": 1750692463081338,
+                    "duration": 23,
+                    "tags": [
+                        {
+                            "key": "agent.id",
+                            "type": "string",
+                            "value": "hotel_agent_f7c53bd04cfc432a871a031cb575ccb6/default"
+                        },
+                        {
+                            "key": "agent.name",
+                            "type": "string",
+                            "value": "hotel_agent"
+                        },
+                        {
+                            "key": "operation",
+                            "type": "string",
+                            "value": "handle_response_message"
+                        },
+                        {
+                            "key": "otel.scope.name",
+                            "type": "string",
+                            "value": "semantic_kernel.utils.telemetry.group_chat_diagnostics.decorators"
+                        },
+                        {
+                            "key": "otel.status_code",
+                            "type": "string",
+                            "value": "OK"
+                        },
+                        {
+                            "key": "span.kind",
+                            "type": "string",
+                            "value": "internal"
+                        }
+                    ],
+                    "logs": [],
+                    "processID": "p1",
+                    "warnings": null
+                },
+                {
+                    "traceID": "61085bda55888d292283502aafdca1f7",
+                    "spanID": "2076742d16198c2a",
+                    "operationName": "group_chat.manager.determine_state_and_take_action",
+                    "references": [
+                        {
+                            "refType": "CHILD_OF",
+                            "traceID": "61085bda55888d292283502aafdca1f7",
+                            "spanID": "fc7159e0bd714491"
+                        }
+                    ],
+                    "startTime": 1750692445318519,
+                    "duration": 3014231,
+                    "tags": [
+                        {
+                            "key": "chat_history.message_count",
+                            "type": "int64",
+                            "value": 1
+                        },
+                        {
+                            "key": "manager.current_round",
+                            "type": "int64",
+                            "value": 0
+                        },
+                        {
+                            "key": "manager_type",
+                            "type": "string",
+                            "value": "AgentBaseGroupChatManager"
+                        },
+                        {
+                            "key": "operation",
+                            "type": "string",
+                            "value": "determine_state_and_take_action"
+                        },
+                        {
+                            "key": "otel.scope.name",
+                            "type": "string",
+                            "value": "semantic_kernel.utils.telemetry.group_chat_diagnostics.decorators"
+                        },
+                        {
+                            "key": "otel.status_code",
+                            "type": "string",
+                            "value": "OK"
+                        },
+                        {
+                            "key": "span.kind",
+                            "type": "string",
+                            "value": "internal"
+                        }
+                    ],
+                    "logs": [],
+                    "processID": "p1",
+                    "warnings": null
+                },
+                {
+                    "traceID": "61085bda55888d292283502aafdca1f7",
+                    "spanID": "23cf318929d8f417",
+                    "operationName": "streaming_message_final",
+                    "references": [
+                        {
+                            "refType": "CHILD_OF",
+                            "traceID": "61085bda55888d292283502aafdca1f7",
+                            "spanID": "81037d45148b5e87"
+                        }
+                    ],
+                    "startTime": 1750692457276025,
+                    "duration": 12,
+                    "tags": [
+                        {
+                            "key": "gen_ai.memory.operation_type",
+                            "type": "string",
+                            "value": "write"
+                        },
+                        {
+                            "key": "gen_ai.memory.source_type",
+                            "type": "string",
+                            "value": "streaming_response"
+                        },
+                        {
+                            "key": "gen_ai.operation.name",
+                            "type": "string",
+                            "value": "memory_operation"
+                        },
+                        {
+                            "key": "message.agent_name",
+                            "type": "string",
+                            "value": "planner"
+                        },
+                        {
+                            "key": "message.content_length",
+                            "type": "int64",
+                            "value": 0
+                        },
+                        {
+                            "key": "message.processing_complete",
+                            "type": "bool",
+                            "value": true
+                        },
+                        {
+                            "key": "otel.scope.name",
+                            "type": "string",
+                            "value": "__main__"
+                        },
+                        {
+                            "key": "span.kind",
+                            "type": "string",
+                            "value": "internal"
+                        }
+                    ],
+                    "logs": [],
+                    "processID": "p1",
+                    "warnings": null
+                },
+                {
+                    "traceID": "61085bda55888d292283502aafdca1f7",
+                    "spanID": "667991658a1d755c",
+                    "operationName": "chat.completions gpt-4o",
+                    "references": [
+                        {
+                            "refType": "CHILD_OF",
+                            "traceID": "61085bda55888d292283502aafdca1f7",
+                            "spanID": "2e13c86da2d08904"
+                        }
+                    ],
+                    "startTime": 1750692465784812,
+                    "duration": 2351649,
+                    "tags": [
+                        {
+                            "key": "gen_ai.operation.name",
+                            "type": "string",
+                            "value": "chat.completions"
+                        },
+                        {
+                            "key": "gen_ai.request.model",
+                            "type": "string",
+                            "value": "gpt-4o"
+                        },
+                        {
+                            "key": "gen_ai.response.finish_reason",
+                            "type": "string",
+                            "value": "FinishReason.STOP"
+                        },
+                        {
+                            "key": "gen_ai.response.id",
+                            "type": "string",
+                            "value": "chatcmpl-BldNBwBO4EDo8VQbvDRMo5Xsj2ndX"
+                        },
+                        {
+                            "key": "gen_ai.system",
+                            "type": "string",
+                            "value": "openai"
+                        },
+                        {
+                            "key": "gen_ai.usage.input_tokens",
+                            "type": "int64",
+                            "value": 1324
+                        },
+                        {
+                            "key": "gen_ai.usage.output_tokens",
+                            "type": "int64",
+                            "value": 128
+                        },
+                        {
+                            "key": "otel.scope.name",
+                            "type": "string",
+                            "value": "semantic_kernel.utils.telemetry.model_diagnostics.decorators"
+                        },
+                        {
+                            "key": "server.address",
+                            "type": "string",
+                            "value": "https://ai-naarkalgaihub999971652049.openai.azure.com/openai/deployments/gpt-4o/"
+                        },
+                        {
+                            "key": "span.kind",
+                            "type": "string",
+                            "value": "internal"
+                        }
+                    ],
+                    "logs": [],
+                    "processID": "p1",
+                    "warnings": null
+                },
+                {
+                    "traceID": "61085bda55888d292283502aafdca1f7",
+                    "spanID": "2fc13dcafd6b32b3",
+                    "operationName": "invoke_agent Manager",
+                    "references": [
+                        {
+                            "refType": "CHILD_OF",
+                            "traceID": "61085bda55888d292283502aafdca1f7",
+                            "spanID": "6483b66d6200b4bc"
+                        }
+                    ],
+                    "startTime": 1750692464716936,
+                    "duration": 1047221,
+                    "tags": [
+                        {
+                            "key": "gen_ai.agent.description",
+                            "type": "string",
+                            "value": "The manager of the group chat, responsible for coordinating the agents."
+                        },
+                        {
+                            "key": "gen_ai.agent.id",
+                            "type": "string",
+                            "value": "63bb98a7-6b73-43b1-8303-260d770bae22"
+                        },
+                        {
+                            "key": "gen_ai.agent.name",
+                            "type": "string",
+                            "value": "Manager"
+                        },
+                        {
+                            "key": "gen_ai.operation.name",
+                            "type": "string",
+                            "value": "invoke_agent"
+                        },
+                        {
+                            "key": "otel.scope.name",
+                            "type": "string",
+                            "value": "semantic_kernel.utils.telemetry.agent_diagnostics.decorators"
+                        },
+                        {
+                            "key": "span.kind",
+                            "type": "string",
+                            "value": "internal"
+                        }
+                    ],
+                    "logs": [],
+                    "processID": "p1",
+                    "warnings": null
+                },
+                {
+                    "traceID": "61085bda55888d292283502aafdca1f7",
+                    "spanID": "7f1e8a5d6ede7c91",
+                    "operationName": "memory_operation_summary",
+                    "references": [
+                        {
+                            "refType": "CHILD_OF",
+                            "traceID": "61085bda55888d292283502aafdca1f7",
+                            "spanID": "6483b66d6200b4bc"
+                        }
+                    ],
+                    "startTime": 1750692465777802,
+                    "duration": 2358735,
+                    "tags": [
+                        {
+                            "key": "conversation.message_count",
+                            "type": "int64",
+                            "value": 3
+                        },
+                        {
+                            "key": "gen_ai.memory.memory_type",
+                            "type": "string",
+                            "value": "working"
+                        },
+                        {
+                            "key": "gen_ai.memory.operation_type",
+                            "type": "string",
+                            "value": "write"
+                        },
+                        {
+                            "key": "gen_ai.memory.size_bytes",
+                            "type": "int64",
+                            "value": 815098
+                        },
+                        {
+                            "key": "gen_ai.memory.source_type",
+                            "type": "string",
+                            "value": "conversation_summary"
+                        },
+                        {
+                            "key": "gen_ai.operation.name",
+                            "type": "string",
+                            "value": "memory_operation"
+                        },
+                        {
+                            "key": "memory.result_processed",
+                            "type": "bool",
+                            "value": true
+                        },
+                        {
+                            "key": "memory.summary_generated",
+                            "type": "bool",
+                            "value": true
+                        },
+                        {
+                            "key": "memory.summary_length",
+                            "type": "int64",
+                            "value": 486
+                        },
+                        {
+                            "key": "otel.scope.name",
+                            "type": "string",
+                            "value": "__main__"
+                        },
+                        {
+                            "key": "span.kind",
+                            "type": "string",
+                            "value": "internal"
+                        }
+                    ],
+                    "logs": [],
+                    "processID": "p1",
+                    "warnings": null
+                },
+                {
+                    "traceID": "61085bda55888d292283502aafdca1f7",
+                    "spanID": "1384bc617d8a24b7",
+                    "operationName": "group_chat.agent.handle_start_message",
+                    "references": [
+                        {
+                            "refType": "CHILD_OF",
+                            "traceID": "61085bda55888d292283502aafdca1f7",
+                            "spanID": "9fd4c5c651b28fb0"
+                        }
+                    ],
+                    "startTime": 1750692445317401,
+                    "duration": 56,
+                    "tags": [
+                        {
+                            "key": "agent.id",
+                            "type": "string",
+                            "value": "flight_agent_f7c53bd04cfc432a871a031cb575ccb6/default"
+                        },
+                        {
+                            "key": "agent.name",
+                            "type": "string",
+                            "value": "flight_agent"
+                        },
+                        {
+                            "key": "operation",
+                            "type": "string",
+                            "value": "handle_start_message"
+                        },
+                        {
+                            "key": "otel.scope.name",
+                            "type": "string",
+                            "value": "semantic_kernel.utils.telemetry.group_chat_diagnostics.decorators"
+                        },
+                        {
+                            "key": "otel.status_code",
+                            "type": "string",
+                            "value": "OK"
+                        },
+                        {
+                            "key": "span.kind",
+                            "type": "string",
+                            "value": "internal"
+                        }
+                    ],
+                    "logs": [],
+                    "processID": "p1",
+                    "warnings": null
+                },
+                {
+                    "traceID": "61085bda55888d292283502aafdca1f7",
+                    "spanID": "a1b279b72eb51c8c",
+                    "operationName": "agent_runtime ack",
+                    "references": [
+                        {
+                            "refType": "CHILD_OF",
+                            "traceID": "61085bda55888d292283502aafdca1f7",
+                            "spanID": "925d222cae14e00f"
+                        },
+                        {
+                            "refType": "FOLLOWS_FROM",
+                            "traceID": "61085bda55888d292283502aafdca1f7",
+                            "spanID": "aea20dcd9c73c7f3"
+                        }
+                    ],
+                    "startTime": 1750692445317927,
+                    "duration": 37,
+                    "tags": [
+                        {
+                            "key": "messaging.destination",
+                            "type": "string",
+                            "value": ""
+                        },
+                        {
+                            "key": "messaging.operation",
+                            "type": "string",
+                            "value": "receive"
+                        },
+                        {
+                            "key": "otel.scope.name",
+                            "type": "string",
+                            "value": "agent_runtime InProcessRuntime"
+                        },
+                        {
+                            "key": "span.kind",
+                            "type": "string",
+                            "value": "consumer"
+                        }
+                    ],
+                    "logs": [],
+                    "processID": "p1",
+                    "warnings": null
+                },
+                {
+                    "traceID": "61085bda55888d292283502aafdca1f7",
+                    "spanID": "d322ce8145340d54",
+                    "operationName": "agent_runtime create flight_agent_f7c53bd04cfc432a871a031cb575ccb6.(default)-A",
+                    "references": [
+                        {
+                            "refType": "CHILD_OF",
+                            "traceID": "61085bda55888d292283502aafdca1f7",
+                            "spanID": "09da4117e66688ab"
+                        }
+                    ],
+                    "startTime": 1750692445316405,
+                    "duration": 1593,
+                    "tags": [
+                        {
+                            "key": "messaging.destination",
+                            "type": "string",
+                            "value": "flight_agent_f7c53bd04cfc432a871a031cb575ccb6.(default)-A"
+                        },
+                        {
+                            "key": "messaging.message.type",
+                            "type": "string",
+                            "value": "GroupChatStartMessage"
+                        },
+                        {
+                            "key": "messaging.operation",
+                            "type": "string",
+                            "value": "create"
+                        },
+                        {
+                            "key": "otel.scope.name",
+                            "type": "string",
+                            "value": "agent_runtime InProcessRuntime"
+                        },
+                        {
+                            "key": "span.kind",
+                            "type": "string",
+                            "value": "producer"
+                        }
+                    ],
+                    "logs": [],
+                    "processID": "p1",
+                    "warnings": null
+                },
+                {
+                    "traceID": "61085bda55888d292283502aafdca1f7",
+                    "spanID": "de7d3376fe7bca0f",
+                    "operationName": "chat.completions gpt-4o",
+                    "references": [
+                        {
+                            "refType": "CHILD_OF",
+                            "traceID": "61085bda55888d292283502aafdca1f7",
+                            "spanID": "744395b0e40f128f"
+                        }
+                    ],
+                    "startTime": 1750692445321506,
+                    "duration": 1863844,
+                    "tags": [
+                        {
+                            "key": "gen_ai.operation.name",
+                            "type": "string",
+                            "value": "chat.completions"
+                        },
+                        {
+                            "key": "gen_ai.request.model",
+                            "type": "string",
+                            "value": "gpt-4o"
+                        },
+                        {
+                            "key": "gen_ai.response.finish_reason",
+                            "type": "string",
+                            "value": "FinishReason.STOP"
+                        },
+                        {
+                            "key": "gen_ai.response.id",
+                            "type": "string",
+                            "value": "chatcmpl-BldMs3X35tl4X6OY8WsJpjfSfCMK3"
+                        },
+                        {
+                            "key": "gen_ai.system",
+                            "type": "string",
+                            "value": "openai"
+                        },
+                        {
+                            "key": "gen_ai.usage.input_tokens",
+                            "type": "int64",
+                            "value": 235
+                        },
+                        {
+                            "key": "gen_ai.usage.output_tokens",
+                            "type": "int64",
+                            "value": 32
+                        },
+                        {
+                            "key": "otel.scope.name",
+                            "type": "string",
+                            "value": "semantic_kernel.utils.telemetry.model_diagnostics.decorators"
+                        },
+                        {
+                            "key": "server.address",
+                            "type": "string",
+                            "value": "https://ai-naarkalgaihub999971652049.openai.azure.com/openai/deployments/gpt-4o/"
+                        },
+                        {
+                            "key": "span.kind",
+                            "type": "string",
+                            "value": "internal"
+                        }
+                    ],
+                    "logs": [],
+                    "processID": "p1",
+                    "warnings": null
+                },
+                {
+                    "traceID": "61085bda55888d292283502aafdca1f7",
+                    "spanID": "496f443d77e359b0",
+                    "operationName": "invoke_agent Manager",
+                    "references": [
+                        {
+                            "refType": "CHILD_OF",
+                            "traceID": "61085bda55888d292283502aafdca1f7",
+                            "spanID": "a4bdc9f5b84b77ff"
+                        }
+                    ],
+                    "startTime": 1750692447185615,
+                    "duration": 1146879,
+                    "tags": [
+                        {
+                            "key": "gen_ai.agent.description",
+                            "type": "string",
+                            "value": "The manager of the group chat, responsible for coordinating the agents."
+                        },
+                        {
+                            "key": "gen_ai.agent.id",
+                            "type": "string",
+                            "value": "63bb98a7-6b73-43b1-8303-260d770bae22"
+                        },
+                        {
+                            "key": "gen_ai.agent.name",
+                            "type": "string",
+                            "value": "Manager"
+                        },
+                        {
+                            "key": "gen_ai.operation.name",
+                            "type": "string",
+                            "value": "invoke_agent"
+                        },
+                        {
+                            "key": "otel.scope.name",
+                            "type": "string",
+                            "value": "semantic_kernel.utils.telemetry.agent_diagnostics.decorators"
+                        },
+                        {
+                            "key": "span.kind",
+                            "type": "string",
+                            "value": "internal"
+                        }
+                    ],
+                    "logs": [],
+                    "processID": "p1",
+                    "warnings": null
+                },
+                {
+                    "traceID": "61085bda55888d292283502aafdca1f7",
+                    "spanID": "1a59b011c83ec64b",
+                    "operationName": "agent_runtime process planner_f7c53bd04cfc432a871a031cb575ccb6.(default)-A",
+                    "references": [
+                        {
+                            "refType": "CHILD_OF",
+                            "traceID": "61085bda55888d292283502aafdca1f7",
+                            "spanID": "d46695dd34722922"
+                        },
+                        {
+                            "refType": "FOLLOWS_FROM",
+                            "traceID": "61085bda55888d292283502aafdca1f7",
+                            "spanID": "06740f12212eed23"
+                        }
+                    ],
+                    "startTime": 1750692448333025,
+                    "duration": 14747926,
+                    "tags": [
+                        {
+                            "key": "messaging.destination",
+                            "type": "string",
+                            "value": "planner_f7c53bd04cfc432a871a031cb575ccb6.(default)-A"
+                        },
+                        {
+                            "key": "messaging.operation",
+                            "type": "string",
+                            "value": "process"
+                        },
+                        {
+                            "key": "otel.scope.name",
+                            "type": "string",
+                            "value": "agent_runtime InProcessRuntime"
+                        },
+                        {
+                            "key": "span.kind",
+                            "type": "string",
+                            "value": "consumer"
+                        }
+                    ],
+                    "logs": [],
+                    "processID": "p1",
+                    "warnings": null
+                },
+                {
+                    "traceID": "61085bda55888d292283502aafdca1f7",
+                    "spanID": "1caed847294074f4",
+                    "operationName": "agent_initialization",
+                    "references": [
+                        {
+                            "refType": "CHILD_OF",
+                            "traceID": "61085bda55888d292283502aafdca1f7",
+                            "spanID": "925d222cae14e00f"
+                        }
+                    ],
+                    "startTime": 1750692445207515,
+                    "duration": 69715,
+                    "tags": [
+                        {
+                            "key": "agents.count",
+                            "type": "int64",
+                            "value": 6
+                        },
+                        {
+                            "key": "agents.names",
+                            "type": "string",
+                            "value": "[\"conversation_manager\",\"planner\",\"router\",\"destination_expert\",\"flight_agent\",\"hotel_agent\"]"
+                        },
+                        {
+                            "key": "gen_ai.operation.name",
+                            "type": "string",
+                            "value": "execute_task"
+                        },
+                        {
+                            "key": "gen_ai.task.description",
+                            "type": "string",
+                            "value": "Initialize multi-agent system"
+                        },
+                        {
+                            "key": "gen_ai.task.id",
+                            "type": "string",
+                            "value": "agent_setup_001"
+                        },
+                        {
+                            "key": "otel.scope.name",
+                            "type": "string",
+                            "value": "__main__"
+                        },
+                        {
+                            "key": "span.kind",
+                            "type": "string",
+                            "value": "internal"
+                        }
+                    ],
+                    "logs": [],
+                    "processID": "p1",
+                    "warnings": null
+                },
+                {
+                    "traceID": "61085bda55888d292283502aafdca1f7",
+                    "spanID": "bca93fa87aabf2b2",
+                    "operationName": "group_chat.agent.handle_start_message",
+                    "references": [
+                        {
+                            "refType": "CHILD_OF",
+                            "traceID": "61085bda55888d292283502aafdca1f7",
+                            "spanID": "b19b7bab44c28697"
+                        }
+                    ],
+                    "startTime": 1750692445317011,
+                    "duration": 74,
+                    "tags": [
+                        {
+                            "key": "agent.id",
+                            "type": "string",
+                            "value": "planner_f7c53bd04cfc432a871a031cb575ccb6/default"
+                        },
+                        {
+                            "key": "agent.name",
+                            "type": "string",
+                            "value": "planner"
+                        },
+                        {
+                            "key": "operation",
+                            "type": "string",
+                            "value": "handle_start_message"
+                        },
+                        {
+                            "key": "otel.scope.name",
+                            "type": "string",
+                            "value": "semantic_kernel.utils.telemetry.group_chat_diagnostics.decorators"
+                        },
+                        {
+                            "key": "otel.status_code",
+                            "type": "string",
+                            "value": "OK"
+                        },
+                        {
+                            "key": "span.kind",
+                            "type": "string",
+                            "value": "internal"
+                        }
+                    ],
+                    "logs": [],
+                    "processID": "p1",
+                    "warnings": null
+                },
+                {
+                    "traceID": "61085bda55888d292283502aafdca1f7",
+                    "spanID": "d6d9b9fb1a14a2df",
+                    "operationName": "agent_runtime create planner_f7c53bd04cfc432a871a031cb575ccb6.(default)-A",
+                    "references": [
+                        {
+                            "refType": "CHILD_OF",
+                            "traceID": "61085bda55888d292283502aafdca1f7",
+                            "spanID": "09da4117e66688ab"
+                        }
+                    ],
+                    "startTime": 1750692445316268,
+                    "duration": 1590,
+                    "tags": [
+                        {
+                            "key": "messaging.destination",
+                            "type": "string",
+                            "value": "planner_f7c53bd04cfc432a871a031cb575ccb6.(default)-A"
+                        },
+                        {
+                            "key": "messaging.message.type",
+                            "type": "string",
+                            "value": "GroupChatStartMessage"
+                        },
+                        {
+                            "key": "messaging.operation",
+                            "type": "string",
+                            "value": "create"
+                        },
+                        {
+                            "key": "otel.scope.name",
+                            "type": "string",
+                            "value": "agent_runtime InProcessRuntime"
+                        },
+                        {
+                            "key": "span.kind",
+                            "type": "string",
+                            "value": "producer"
+                        }
+                    ],
+                    "logs": [],
+                    "processID": "p1",
+                    "warnings": null
+                },
+                {
+                    "traceID": "61085bda55888d292283502aafdca1f7",
+                    "spanID": "2aa29b0487a7afe8",
+                    "operationName": "agent_runtime process hotel_agent_f7c53bd04cfc432a871a031cb575ccb6.(default)-A",
+                    "references": [
+                        {
+                            "refType": "CHILD_OF",
+                            "traceID": "61085bda55888d292283502aafdca1f7",
+                            "spanID": "ca22d07e021852d4"
+                        },
+                        {
+                            "refType": "FOLLOWS_FROM",
+                            "traceID": "61085bda55888d292283502aafdca1f7",
+                            "spanID": "2cc3b6a0c0a59ed1"
+                        }
+                    ],
+                    "startTime": 1750692463081327,
+                    "duration": 38,
+                    "tags": [
+                        {
+                            "key": "messaging.destination",
+                            "type": "string",
+                            "value": "hotel_agent_f7c53bd04cfc432a871a031cb575ccb6.(default)-A"
+                        },
+                        {
+                            "key": "messaging.operation",
+                            "type": "string",
+                            "value": "process"
+                        },
+                        {
+                            "key": "otel.scope.name",
+                            "type": "string",
+                            "value": "agent_runtime InProcessRuntime"
+                        },
+                        {
+                            "key": "span.kind",
+                            "type": "string",
+                            "value": "consumer"
+                        }
+                    ],
+                    "logs": [],
+                    "processID": "p1",
+                    "warnings": null
+                },
+                {
+                    "traceID": "61085bda55888d292283502aafdca1f7",
+                    "spanID": "6d4fd5db9c565240",
+                    "operationName": "group_chat.agent.invoke",
+                    "references": [
+                        {
+                            "refType": "CHILD_OF",
+                            "traceID": "61085bda55888d292283502aafdca1f7",
+                            "spanID": "1a59b011c83ec64b"
+                        }
+                    ],
+                    "startTime": 1750692448333044,
+                    "duration": 14747900,
+                    "tags": [
+                        {
+                            "key": "agent.id",
+                            "type": "string",
+                            "value": "planner_f7c53bd04cfc432a871a031cb575ccb6/default"
+                        },
+                        {
+                            "key": "agent.name",
+                            "type": "string",
+                            "value": "planner"
+                        },
+                        {
+                            "key": "execution.duration_seconds",
+                            "type": "float64",
+                            "value": 14.747886896133423
+                        },
+                        {
+                            "key": "operation",
+                            "type": "string",
+                            "value": "invoke"
+                        },
+                        {
+                            "key": "otel.scope.name",
+                            "type": "string",
+                            "value": "semantic_kernel.utils.telemetry.group_chat_diagnostics.decorators"
+                        },
+                        {
+                            "key": "otel.status_code",
+                            "type": "string",
+                            "value": "OK"
+                        },
+                        {
+                            "key": "span.kind",
+                            "type": "string",
+                            "value": "internal"
+                        }
+                    ],
+                    "logs": [],
+                    "processID": "p1",
+                    "warnings": null
+                },
+                {
+                    "traceID": "61085bda55888d292283502aafdca1f7",
+                    "spanID": "aea20dcd9c73c7f3",
+                    "operationName": "agent_runtime send flight_agent_f7c53bd04cfc432a871a031cb575ccb6.(default)-A",
+                    "references": [
+                        {
+                            "refType": "CHILD_OF",
+                            "traceID": "61085bda55888d292283502aafdca1f7",
+                            "spanID": "925d222cae14e00f"
+                        },
+                        {
+                            "refType": "FOLLOWS_FROM",
+                            "traceID": "61085bda55888d292283502aafdca1f7",
+                            "spanID": "d322ce8145340d54"
+                        }
+                    ],
+                    "startTime": 1750692445317251,
+                    "duration": 239,
+                    "tags": [
+                        {
+                            "key": "messaging.destination",
+                            "type": "string",
+                            "value": "flight_agent_f7c53bd04cfc432a871a031cb575ccb6.(default)-A"
+                        },
+                        {
+                            "key": "messaging.operation",
+                            "type": "string",
+                            "value": "publish"
+                        },
+                        {
+                            "key": "otel.scope.name",
+                            "type": "string",
+                            "value": "agent_runtime InProcessRuntime"
+                        },
+                        {
+                            "key": "span.kind",
+                            "type": "string",
+                            "value": "producer"
+                        }
+                    ],
+                    "logs": [],
+                    "processID": "p1",
+                    "warnings": null
+                },
+                {
+                    "traceID": "61085bda55888d292283502aafdca1f7",
+                    "spanID": "5dfc6f58b1d28ef7",
+                    "operationName": "invoke_agent planner",
+                    "references": [
+                        {
+                            "refType": "CHILD_OF",
+                            "traceID": "61085bda55888d292283502aafdca1f7",
+                            "spanID": "6d4fd5db9c565240"
+                        }
+                    ],
+                    "startTime": 1750692448333083,
+                    "duration": 14733218,
+                    "tags": [
+                        {
+                            "key": "gen_ai.agent.description",
+                            "type": "string",
+                            "value": "Creates comprehensive travel plans including flights, hotels, and activities"
+                        },
+                        {
+                            "key": "gen_ai.agent.id",
+                            "type": "string",
+                            "value": "6f730ac3-546d-47da-babd-ac77e0d0ecee"
+                        },
+                        {
+                            "key": "gen_ai.agent.name",
+                            "type": "string",
+                            "value": "planner"
+                        },
+                        {
+                            "key": "gen_ai.operation.name",
+                            "type": "string",
+                            "value": "invoke_agent"
+                        },
+                        {
+                            "key": "otel.scope.name",
+                            "type": "string",
+                            "value": "semantic_kernel.utils.telemetry.agent_diagnostics.decorators"
+                        },
+                        {
+                            "key": "span.kind",
+                            "type": "string",
+                            "value": "internal"
+                        }
+                    ],
+                    "logs": [],
+                    "processID": "p1",
+                    "warnings": null
+                },
+                {
+                    "traceID": "61085bda55888d292283502aafdca1f7",
+                    "spanID": "925d222cae14e00f",
+                    "operationName": "travel_planning_session",
+                    "references": [
+                        {
+                            "refType": "CHILD_OF",
+                            "traceID": "61085bda55888d292283502aafdca1f7",
+                            "spanID": "6c132d1d512a5878"
+                        }
+                    ],
+                    "startTime": 1750692445207491,
+                    "duration": 22929807,
+                    "tags": [
+                        {
+                            "key": "conversation.id",
+                            "type": "string",
+                            "value": "conv_enhanced_001"
+                        },
+                        {
+                            "key": "otel.scope.name",
+                            "type": "string",
+                            "value": "__main__"
+                        },
+                        {
+                            "key": "session.type",
+                            "type": "string",
+                            "value": "enhanced_multi_agent_demo"
+                        },
+                        {
+                            "key": "span.kind",
+                            "type": "string",
+                            "value": "internal"
+                        },
+                        {
+                            "key": "user.id",
+                            "type": "string",
+                            "value": "demo_user_enhanced"
+                        }
+                    ],
+                    "logs": [],
+                    "processID": "p1",
+                    "warnings": null
+                },
+                {
+                    "traceID": "61085bda55888d292283502aafdca1f7",
+                    "spanID": "ca257c2b72d37532",
+                    "operationName": "orchestration_setup",
+                    "references": [
+                        {
+                            "refType": "CHILD_OF",
+                            "traceID": "61085bda55888d292283502aafdca1f7",
+                            "spanID": "925d222cae14e00f"
+                        }
+                    ],
+                    "startTime": 1750692445277266,
+                    "duration": 7571,
+                    "tags": [
+                        {
+                            "key": "gen_ai.operation.name",
+                            "type": "string",
+                            "value": "execute_task"
+                        },
+                        {
+                            "key": "gen_ai.task.description",
+                            "type": "string",
+                            "value": "Setup group chat orchestration"
+                        },
+                        {
+                            "key": "gen_ai.task.id",
+                            "type": "string",
+                            "value": "orchestration_setup_001"
+                        },
+                        {
+                            "key": "otel.scope.name",
+                            "type": "string",
+                            "value": "__main__"
+                        },
+                        {
+                            "key": "span.kind",
+                            "type": "string",
+                            "value": "internal"
+                        }
+                    ],
+                    "logs": [],
+                    "processID": "p1",
+                    "warnings": null
+                },
+                {
+                    "traceID": "61085bda55888d292283502aafdca1f7",
+                    "spanID": "0d6922678cab091d",
+                    "operationName": "planning_user_input_assessment",
+                    "references": [
+                        {
+                            "refType": "CHILD_OF",
+                            "traceID": "61085bda55888d292283502aafdca1f7",
+                            "spanID": "2076742d16198c2a"
+                        }
+                    ],
+                    "startTime": 1750692445318589,
+                    "duration": 14,
+                    "tags": [
+                        {
+                            "key": "chat.last_message_role",
+                            "type": "string",
+                            "value": "AuthorRole.USER"
+                        },
+                        {
+                            "key": "chat.message_count",
+                            "type": "int64",
+                            "value": 1
+                        },
+                        {
+                            "key": "gen_ai.planning.complexity",
+                            "type": "string",
+                            "value": "simple"
+                        },
+                        {
+                            "key": "gen_ai.planning.stage",
+                            "type": "string",
+                            "value": "interaction_control"
+                        },
+                        {
+                            "key": "gen_ai.planning.type",
+                            "type": "string",
+                            "value": "user_input_assessment"
+                        },
+                        {
+                            "key": "otel.scope.name",
+                            "type": "string",
+                            "value": "__main__"
+                        },
+                        {
+                            "key": "planning.decision",
+                            "type": "string",
+                            "value": "no_input_needed_recent"
+                        },
+                        {
+                            "key": "span.kind",
+                            "type": "string",
+                            "value": "internal"
+                        }
+                    ],
+                    "logs": [],
+                    "processID": "p1",
+                    "warnings": null
+                },
+                {
+                    "traceID": "61085bda55888d292283502aafdca1f7",
+                    "spanID": "091ecde4d3471cc3",
+                    "operationName": "agent_runtime ack",
+                    "references": [
+                        {
+                            "refType": "CHILD_OF",
+                            "traceID": "61085bda55888d292283502aafdca1f7",
+                            "spanID": "925d222cae14e00f"
+                        },
+                        {
+                            "refType": "FOLLOWS_FROM",
+                            "traceID": "61085bda55888d292283502aafdca1f7",
+                            "spanID": "fc0f1a2f1974505b"
+                        }
+                    ],
+                    "startTime": 1750692445317792,
+                    "duration": 24,
+                    "tags": [
+                        {
+                            "key": "messaging.destination",
+                            "type": "string",
+                            "value": ""
+                        },
+                        {
+                            "key": "messaging.operation",
+                            "type": "string",
+                            "value": "receive"
+                        },
+                        {
+                            "key": "otel.scope.name",
+                            "type": "string",
+                            "value": "agent_runtime InProcessRuntime"
+                        },
+                        {
+                            "key": "span.kind",
+                            "type": "string",
+                            "value": "consumer"
+                        }
+                    ],
+                    "logs": [],
+                    "processID": "p1",
+                    "warnings": null
+                },
+                {
+                    "traceID": "61085bda55888d292283502aafdca1f7",
+                    "spanID": "744395b0e40f128f",
+                    "operationName": "AutoFunctionInvocationLoop",
+                    "references": [
+                        {
+                            "refType": "CHILD_OF",
+                            "traceID": "61085bda55888d292283502aafdca1f7",
+                            "spanID": "0ec0e06944280ae5"
+                        }
+                    ],
+                    "startTime": 1750692445321455,
+                    "duration": 1863905,
+                    "tags": [
+                        {
+                            "key": "otel.scope.name",
+                            "type": "string",
+                            "value": "semantic_kernel.connectors.ai.chat_completion_client_base"
+                        },
+                        {
+                            "key": "sk.available_functions",
+                            "type": "string",
+                            "value": ""
+                        },
+                        {
+                            "key": "span.kind",
+                            "type": "string",
+                            "value": "internal"
+                        }
+                    ],
+                    "logs": [],
+                    "processID": "p1",
+                    "warnings": null
+                },
+                {
+                    "traceID": "61085bda55888d292283502aafdca1f7",
+                    "spanID": "0ec0e06944280ae5",
+                    "operationName": "invoke_agent Manager",
+                    "references": [
+                        {
+                            "refType": "CHILD_OF",
+                            "traceID": "61085bda55888d292283502aafdca1f7",
+                            "spanID": "2076742d16198c2a"
+                        }
+                    ],
+                    "startTime": 1750692445319025,
+                    "duration": 1866392,
+                    "tags": [
+                        {
+                            "key": "gen_ai.agent.description",
+                            "type": "string",
+                            "value": "The manager of the group chat, responsible for coordinating the agents."
+                        },
+                        {
+                            "key": "gen_ai.agent.id",
+                            "type": "string",
+                            "value": "63bb98a7-6b73-43b1-8303-260d770bae22"
+                        },
+                        {
+                            "key": "gen_ai.agent.name",
+                            "type": "string",
+                            "value": "Manager"
+                        },
+                        {
+                            "key": "gen_ai.operation.name",
+                            "type": "string",
+                            "value": "invoke_agent"
+                        },
+                        {
+                            "key": "otel.scope.name",
+                            "type": "string",
+                            "value": "semantic_kernel.utils.telemetry.agent_diagnostics.decorators"
+                        },
+                        {
+                            "key": "span.kind",
+                            "type": "string",
+                            "value": "internal"
+                        }
+                    ],
+                    "logs": [],
+                    "processID": "p1",
+                    "warnings": null
+                },
+                {
+                    "traceID": "61085bda55888d292283502aafdca1f7",
+                    "spanID": "c064829c74e776b9",
+                    "operationName": "chat.streaming_completions gpt-4o",
+                    "references": [
+                        {
+                            "refType": "CHILD_OF",
+                            "traceID": "61085bda55888d292283502aafdca1f7",
+                            "spanID": "81037d45148b5e87"
+                        }
+                    ],
+                    "startTime": 1750692456651875,
+                    "duration": 623606,
+                    "tags": [
+                        {
+                            "key": "gen_ai.operation.name",
+                            "type": "string",
+                            "value": "chat.streaming_completions"
+                        },
+                        {
+                            "key": "gen_ai.request.model",
+                            "type": "string",
+                            "value": "gpt-4o"
+                        },
+                        {
+                            "key": "gen_ai.response.finish_reason",
+                            "type": "string",
+                            "value": "FinishReason.TOOL_CALLS"
+                        },
+                        {
+                            "key": "gen_ai.response.id",
+                            "type": "string",
+                            "value": "chatcmpl-BldN2eBSX27QuAGdFp24obuH6y1J0"
+                        },
+                        {
+                            "key": "gen_ai.system",
+                            "type": "string",
+                            "value": "openai"
+                        },
+                        {
+                            "key": "gen_ai.usage.input_tokens",
+                            "type": "int64",
+                            "value": 606
+                        },
+                        {
+                            "key": "gen_ai.usage.output_tokens",
+                            "type": "int64",
+                            "value": 21
+                        },
+                        {
+                            "key": "otel.scope.name",
+                            "type": "string",
+                            "value": "semantic_kernel.utils.telemetry.model_diagnostics.decorators"
+                        },
+                        {
+                            "key": "server.address",
+                            "type": "string",
+                            "value": "https://ai-naarkalgaihub999971652049.openai.azure.com/openai/deployments/gpt-4o/"
+                        },
+                        {
+                            "key": "span.kind",
+                            "type": "string",
+                            "value": "internal"
+                        }
+                    ],
+                    "logs": [],
+                    "processID": "p1",
+                    "warnings": null
+                },
+                {
+                    "traceID": "61085bda55888d292283502aafdca1f7",
+                    "spanID": "00b801c2a81755ad",
+                    "operationName": "streaming_message_final",
+                    "references": [
+                        {
+                            "refType": "CHILD_OF",
+                            "traceID": "61085bda55888d292283502aafdca1f7",
+                            "spanID": "81037d45148b5e87"
+                        }
+                    ],
+                    "startTime": 1750692457276073,
+                    "duration": 8,
+                    "tags": [
+                        {
+                            "key": "gen_ai.memory.operation_type",
+                            "type": "string",
+                            "value": "write"
+                        },
+                        {
+                            "key": "gen_ai.memory.source_type",
+                            "type": "string",
+                            "value": "streaming_response"
+                        },
+                        {
+                            "key": "gen_ai.operation.name",
+                            "type": "string",
+                            "value": "memory_operation"
+                        },
+                        {
+                            "key": "message.agent_name",
+                            "type": "string",
+                            "value": "planner"
+                        },
+                        {
+                            "key": "message.content_length",
+                            "type": "int64",
+                            "value": 0
+                        },
+                        {
+                            "key": "message.processing_complete",
+                            "type": "bool",
+                            "value": true
+                        },
+                        {
+                            "key": "otel.scope.name",
+                            "type": "string",
+                            "value": "__main__"
+                        },
+                        {
+                            "key": "span.kind",
+                            "type": "string",
+                            "value": "internal"
+                        }
+                    ],
+                    "logs": [],
+                    "processID": "p1",
+                    "warnings": null
+                },
+                {
+                    "traceID": "61085bda55888d292283502aafdca1f7",
+                    "spanID": "81037d45148b5e87",
+                    "operationName": "AutoFunctionInvocationLoop",
+                    "references": [
+                        {
+                            "refType": "CHILD_OF",
+                            "traceID": "61085bda55888d292283502aafdca1f7",
+                            "spanID": "5dfc6f58b1d28ef7"
+                        }
+                    ],
+                    "startTime": 1750692448333356,
+                    "duration": 14732898,
+                    "tags": [
+                        {
+                            "key": "otel.scope.name",
+                            "type": "string",
+                            "value": "semantic_kernel.connectors.ai.chat_completion_client_base"
+                        },
+                        {
+                            "key": "sk.available_functions",
+                            "type": "string",
+                            "value": "PlanningPlugin-get_weather,PlanningPlugin-search_flights,PlanningPlugin-search_hotels"
+                        },
+                        {
+                            "key": "span.kind",
+                            "type": "string",
+                            "value": "internal"
+                        }
+                    ],
+                    "logs": [],
+                    "processID": "p1",
+                    "warnings": null
+                },
+                {
+                    "traceID": "61085bda55888d292283502aafdca1f7",
+                    "spanID": "a4bdc9f5b84b77ff",
+                    "operationName": "agent_selection_planning",
+                    "references": [
+                        {
+                            "refType": "CHILD_OF",
+                            "traceID": "61085bda55888d292283502aafdca1f7",
+                            "spanID": "2076742d16198c2a"
+                        }
+                    ],
+                    "startTime": 1750692447185539,
+                    "duration": 1146978,
+                    "tags": [
+                        {
+                            "key": "agent.selection.available_agents",
+                            "type": "string",
+                            "value": "[\"planner\",\"flight_agent\",\"hotel_agent\"]"
+                        },
+                        {
+                            "key": "agent.selection.conversation_length",
+                            "type": "int64",
+                            "value": 1
+                        },
+                        {
+                            "key": "agent.selection.reasoning",
+                            "type": "string",
+                            "value": "The planner should speak next to assess the budget allocation before diving into specific bookings for flights, hotels, and activities. Once the budget is considered, the planner can delegate specific tasks to the flight_agent and hotel_agent based on the budget."
+                        },
+                        {
+                            "key": "agent.selection.selected",
+                            "type": "string",
+                            "value": "planner"
+                        },
+                        {
+                            "key": "agent.selection.total_participants",
+                            "type": "int64",
+                            "value": 3
+                        },
+                        {
+                            "key": "gen_ai.planning.complexity",
+                            "type": "string",
+                            "value": "moderate"
+                        },
+                        {
+                            "key": "gen_ai.planning.stage",
+                            "type": "string",
+                            "value": "agent_coordination"
+                        },
+                        {
+                            "key": "gen_ai.planning.type",
+                            "type": "string",
+                            "value": "agent_selection"
+                        },
+                        {
+                            "key": "otel.scope.name",
+                            "type": "string",
+                            "value": "__main__"
+                        },
+                        {
+                            "key": "planning.decision",
+                            "type": "string",
+                            "value": "agent_selected"
+                        },
+                        {
+                            "key": "span.kind",
+                            "type": "string",
+                            "value": "internal"
+                        }
+                    ],
+                    "logs": [],
+                    "processID": "p1",
+                    "warnings": null
+                },
+                {
+                    "traceID": "61085bda55888d292283502aafdca1f7",
+                    "spanID": "c3839ac459a0047c",
+                    "operationName": "agent_runtime process hotel_agent_f7c53bd04cfc432a871a031cb575ccb6.(default)-A",
+                    "references": [
+                        {
+                            "refType": "CHILD_OF",
+                            "traceID": "61085bda55888d292283502aafdca1f7",
+                            "spanID": "d0ea60f19133210b"
+                        },
+                        {
+                            "refType": "FOLLOWS_FROM",
+                            "traceID": "61085bda55888d292283502aafdca1f7",
+                            "spanID": "93a07fbb93e9465f"
+                        }
+                    ],
+                    "startTime": 1750692445317660,
+                    "duration": 52,
+                    "tags": [
+                        {
+                            "key": "messaging.destination",
+                            "type": "string",
+                            "value": "hotel_agent_f7c53bd04cfc432a871a031cb575ccb6.(default)-A"
+                        },
+                        {
+                            "key": "messaging.operation",
+                            "type": "string",
+                            "value": "process"
+                        },
+                        {
+                            "key": "otel.scope.name",
+                            "type": "string",
+                            "value": "agent_runtime InProcessRuntime"
+                        },
+                        {
+                            "key": "span.kind",
+                            "type": "string",
+                            "value": "consumer"
+                        }
+                    ],
+                    "logs": [],
+                    "processID": "p1",
+                    "warnings": null
+                },
+                {
+                    "traceID": "61085bda55888d292283502aafdca1f7",
+                    "spanID": "06740f12212eed23",
+                    "operationName": "agent_runtime create f7c53bd04cfc432a871a031cb575ccb6.(default)-T",
+                    "references": [
+                        {
+                            "refType": "CHILD_OF",
+                            "traceID": "61085bda55888d292283502aafdca1f7",
+                            "spanID": "2076742d16198c2a"
+                        }
+                    ],
+                    "startTime": 1750692448332665,
+                    "duration": 76,
+                    "tags": [
+                        {
+                            "key": "messaging.destination",
+                            "type": "string",
+                            "value": "f7c53bd04cfc432a871a031cb575ccb6.(default)-T"
+                        },
+                        {
+                            "key": "messaging.message.type",
+                            "type": "string",
+                            "value": "GroupChatRequestMessage"
+                        },
+                        {
+                            "key": "messaging.operation",
+                            "type": "string",
+                            "value": "create"
+                        },
+                        {
+                            "key": "otel.scope.name",
+                            "type": "string",
+                            "value": "agent_runtime InProcessRuntime"
+                        },
+                        {
+                            "key": "span.kind",
+                            "type": "string",
+                            "value": "producer"
+                        }
+                    ],
+                    "logs": [],
+                    "processID": "p1",
+                    "warnings": null
+                },
+                {
+                    "traceID": "61085bda55888d292283502aafdca1f7",
+                    "spanID": "fcd27df74eb24f4a",
+                    "operationName": "streaming_message_final",
+                    "references": [
+                        {
+                            "refType": "CHILD_OF",
+                            "traceID": "61085bda55888d292283502aafdca1f7",
+                            "spanID": "81037d45148b5e87"
+                        }
+                    ],
+                    "startTime": 1750692456651726,
+                    "duration": 17,
+                    "tags": [
+                        {
+                            "key": "gen_ai.memory.operation_type",
+                            "type": "string",
+                            "value": "write"
+                        },
+                        {
+                            "key": "gen_ai.memory.source_type",
+                            "type": "string",
+                            "value": "streaming_response"
+                        },
+                        {
+                            "key": "gen_ai.operation.name",
+                            "type": "string",
+                            "value": "memory_operation"
+                        },
+                        {
+                            "key": "message.agent_name",
+                            "type": "string",
+                            "value": "planner"
+                        },
+                        {
+                            "key": "message.content_length",
+                            "type": "int64",
+                            "value": 0
+                        },
+                        {
+                            "key": "message.processing_complete",
+                            "type": "bool",
+                            "value": true
+                        },
+                        {
+                            "key": "otel.scope.name",
+                            "type": "string",
+                            "value": "__main__"
+                        },
+                        {
+                            "key": "span.kind",
+                            "type": "string",
+                            "value": "internal"
+                        }
+                    ],
+                    "logs": [],
+                    "processID": "p1",
+                    "warnings": null
+                },
+                {
+                    "traceID": "61085bda55888d292283502aafdca1f7",
+                    "spanID": "5f49572b022fc4a5",
+                    "operationName": "streaming_message_final",
+                    "references": [
+                        {
+                            "refType": "CHILD_OF",
+                            "traceID": "61085bda55888d292283502aafdca1f7",
+                            "spanID": "6d4fd5db9c565240"
+                        }
+                    ],
+                    "startTime": 1750692463066345,
+                    "duration": 10,
+                    "tags": [
+                        {
+                            "key": "gen_ai.memory.operation_type",
+                            "type": "string",
+                            "value": "write"
+                        },
+                        {
+                            "key": "gen_ai.memory.source_type",
+                            "type": "string",
+                            "value": "streaming_response"
+                        },
+                        {
+                            "key": "gen_ai.operation.name",
+                            "type": "string",
+                            "value": "memory_operation"
+                        },
+                        {
+                            "key": "message.agent_name",
+                            "type": "string",
+                            "value": "planner"
+                        },
+                        {
+                            "key": "message.content_length",
+                            "type": "int64",
+                            "value": 0
+                        },
+                        {
+                            "key": "message.processing_complete",
+                            "type": "bool",
+                            "value": true
+                        },
+                        {
+                            "key": "otel.scope.name",
+                            "type": "string",
+                            "value": "__main__"
+                        },
+                        {
+                            "key": "span.kind",
+                            "type": "string",
+                            "value": "internal"
+                        }
+                    ],
+                    "logs": [],
+                    "processID": "p1",
+                    "warnings": null
+                },
+                {
+                    "traceID": "61085bda55888d292283502aafdca1f7",
+                    "spanID": "e45cc8c4dd7ed32c",
+                    "operationName": "planning_user_input_assessment",
+                    "references": [
+                        {
+                            "refType": "CHILD_OF",
+                            "traceID": "61085bda55888d292283502aafdca1f7",
+                            "spanID": "6483b66d6200b4bc"
+                        }
+                    ],
+                    "startTime": 1750692463094391,
+                    "duration": 1607001,
+                    "tags": [
+                        {
+                            "key": "chat.last_message_role",
+                            "type": "string",
+                            "value": "AuthorRole.ASSISTANT"
+                        },
+                        {
+                            "key": "chat.message_count",
+                            "type": "int64",
+                            "value": 3
+                        },
+                        {
+                            "key": "gen_ai.planning.complexity",
+                            "type": "string",
+                            "value": "simple"
+                        },
+                        {
+                            "key": "gen_ai.planning.stage",
+                            "type": "string",
+                            "value": "interaction_control"
+                        },
+                        {
+                            "key": "gen_ai.planning.type",
+                            "type": "string",
+                            "value": "user_input_assessment"
+                        },
+                        {
+                            "key": "otel.scope.name",
+                            "type": "string",
+                            "value": "__main__"
+                        },
+                        {
+                            "key": "planning.decision",
+                            "type": "string",
+                            "value": "continue_conversation"
+                        },
+                        {
+                            "key": "planning.decision_reasoning",
+                            "type": "string",
+                            "value": "The current plan addresses budget constraints, flight, accommodation, and a complete itinerary for the trip. No further input is needed unless the family has specific preferences or changes to their requirements."
+                        },
+                        {
+                            "key": "span.kind",
+                            "type": "string",
+                            "value": "internal"
+                        }
+                    ],
+                    "logs": [],
+                    "processID": "p1",
+                    "warnings": null
+                },
+                {
+                    "traceID": "61085bda55888d292283502aafdca1f7",
+                    "spanID": "2e13c86da2d08904",
+                    "operationName": "AutoFunctionInvocationLoop",
+                    "references": [
+                        {
+                            "refType": "CHILD_OF",
+                            "traceID": "61085bda55888d292283502aafdca1f7",
+                            "spanID": "a096496c4969c9d8"
+                        }
+                    ],
+                    "startTime": 1750692465784789,
+                    "duration": 2351681,
+                    "tags": [
+                        {
+                            "key": "otel.scope.name",
+                            "type": "string",
+                            "value": "semantic_kernel.connectors.ai.chat_completion_client_base"
+                        },
+                        {
+                            "key": "sk.available_functions",
+                            "type": "string",
+                            "value": ""
+                        },
+                        {
+                            "key": "span.kind",
+                            "type": "string",
+                            "value": "internal"
+                        }
+                    ],
+                    "logs": [],
+                    "processID": "p1",
+                    "warnings": null
+                },
+                {
+                    "traceID": "61085bda55888d292283502aafdca1f7",
+                    "spanID": "a22dc001bf8ecad1",
+                    "operationName": "comprehensive_task_execution",
+                    "references": [
+                        {
+                            "refType": "CHILD_OF",
+                            "traceID": "61085bda55888d292283502aafdca1f7",
+                            "spanID": "925d222cae14e00f"
+                        }
+                    ],
+                    "startTime": 1750692445313340,
+                    "duration": 22823821,
+                    "tags": [
+                        {
+                            "key": "gen_ai.operation.name",
+                            "type": "string",
+                            "value": "execute_task"
+                        },
+                        {
+                            "key": "gen_ai.system",
+                            "type": "string",
+                            "value": "semantic_kernel_multi_agent"
+                        },
+                        {
+                            "key": "gen_ai.task.assigned_agents",
+                            "type": "string",
+                            "value": "[\"planner\",\"flight_agent\",\"hotel_agent\"]"
+                        },
+                        {
+                            "key": "gen_ai.task.constraints",
+                            "type": "string",
+                            "value": "[\"budget:5000\",\"duration:5_days\",\"travelers:4\",\"dietary:vegetarian\"]"
+                        },
+                        {
+                            "key": "gen_ai.task.description",
+                            "type": "string",
+                            "value": "Plan a trip to Bali for 5 days including flights, hotels, and activities for a vegetarian family of 4 members. The family lives in Seattle, WA, USA. Their vacation starts on July 30th 2025. They have a strict budget of $5000 for the trip. Please think through this step-by-step: first assess the budget allocation, then find suitable flights, select appropriate vegetarian-friendly accommodations, and plan activities. Show your reasoning process and provide a detailed plan with the necessary bookings."
+                        },
+                        {
+                            "key": "gen_ai.task.expected_output",
+                            "type": "string",
+                            "value": "Complete travel plan with bookings"
+                        },
+                        {
+                            "key": "gen_ai.task.id",
+                            "type": "string",
+                            "value": "bali_trip_planning_001"
+                        },
+                        {
+                            "key": "gen_ai.task.status",
+                            "type": "string",
+                            "value": "completed"
+                        },
+                        {
+                            "key": "otel.scope.name",
+                            "type": "string",
+                            "value": "__main__"
+                        },
+                        {
+                            "key": "span.kind",
+                            "type": "string",
+                            "value": "internal"
+                        },
+                        {
+                            "key": "task.budget",
+                            "type": "int64",
+                            "value": 5000
+                        },
+                        {
+                            "key": "task.destination",
+                            "type": "string",
+                            "value": "Bali"
+                        },
+                        {
+                            "key": "task.duration_days",
+                            "type": "int64",
+                            "value": 5
+                        },
+                        {
+                            "key": "task.expected_tool_usage",
+                            "type": "string",
+                            "value": "[\"flight_search\",\"hotel_search\",\"planning_tools\"]"
+                        },
+                        {
+                            "key": "task.travelers",
+                            "type": "int64",
+                            "value": 4
+                        }
+                    ],
+                    "logs": [],
+                    "processID": "p1",
+                    "warnings": null
+                },
+                {
+                    "traceID": "61085bda55888d292283502aafdca1f7",
+                    "spanID": "05776689bfade81a",
+                    "operationName": "execute_tool PlanningPlugin-get_weather",
+                    "references": [
+                        {
+                            "refType": "CHILD_OF",
+                            "traceID": "61085bda55888d292283502aafdca1f7",
+                            "spanID": "81037d45148b5e87"
+                        }
+                    ],
+                    "startTime": 1750692457275764,
+                    "duration": 110,
+                    "tags": [
+                        {
+                            "key": "gen_ai.operation.name",
+                            "type": "string",
+                            "value": "execute_tool"
+                        },
+                        {
+                            "key": "gen_ai.tool.call.id",
+                            "type": "string",
+                            "value": "call_FQ3Q9XCCDy7Z6TvBJ9ecAKgu"
+                        },
+                        {
+                            "key": "gen_ai.tool.description",
+                            "type": "string",
+                            "value": "Get weather information for a location."
+                        },
+                        {
+                            "key": "gen_ai.tool.name",
+                            "type": "string",
+                            "value": "PlanningPlugin-get_weather"
+                        },
+                        {
+                            "key": "otel.scope.name",
+                            "type": "string",
+                            "value": "semantic_kernel.functions.kernel_function"
+                        },
+                        {
+                            "key": "span.kind",
+                            "type": "string",
+                            "value": "internal"
+                        }
+                    ],
+                    "logs": [],
+                    "processID": "p1",
+                    "warnings": null
+                },
+                {
+                    "traceID": "61085bda55888d292283502aafdca1f7",
+                    "spanID": "1ea14e44768f2d86",
+                    "operationName": "AutoFunctionInvocationLoop",
+                    "references": [
+                        {
+                            "refType": "CHILD_OF",
+                            "traceID": "61085bda55888d292283502aafdca1f7",
+                            "spanID": "2fc13dcafd6b32b3"
+                        }
+                    ],
+                    "startTime": 1750692464717120,
+                    "duration": 1047000,
+                    "tags": [
+                        {
+                            "key": "otel.scope.name",
+                            "type": "string",
+                            "value": "semantic_kernel.connectors.ai.chat_completion_client_base"
+                        },
+                        {
+                            "key": "sk.available_functions",
+                            "type": "string",
+                            "value": ""
+                        },
+                        {
+                            "key": "span.kind",
+                            "type": "string",
+                            "value": "internal"
+                        }
+                    ],
+                    "logs": [],
+                    "processID": "p1",
+                    "warnings": null
+                },
+                {
+                    "traceID": "61085bda55888d292283502aafdca1f7",
+                    "spanID": "fc7159e0bd714491",
+                    "operationName": "group_chat.manager.handle_start_message",
+                    "references": [
+                        {
+                            "refType": "CHILD_OF",
+                            "traceID": "61085bda55888d292283502aafdca1f7",
+                            "spanID": "103b3f8e4715f7a7"
+                        }
+                    ],
+                    "startTime": 1750692445318470,
+                    "duration": 3014285,
+                    "tags": [
+                        {
+                            "key": "chat_history.message_count",
+                            "type": "int64",
+                            "value": 0
+                        },
+                        {
+                            "key": "manager.current_round",
+                            "type": "int64",
+                            "value": 0
+                        },
+                        {
+                            "key": "manager_type",
+                            "type": "string",
+                            "value": "AgentBaseGroupChatManager"
+                        },
+                        {
+                            "key": "operation",
+                            "type": "string",
+                            "value": "handle_start_message"
+                        },
+                        {
+                            "key": "otel.scope.name",
+                            "type": "string",
+                            "value": "semantic_kernel.utils.telemetry.group_chat_diagnostics.decorators"
+                        },
+                        {
+                            "key": "otel.status_code",
+                            "type": "string",
+                            "value": "OK"
+                        },
+                        {
+                            "key": "span.kind",
+                            "type": "string",
+                            "value": "internal"
+                        }
+                    ],
+                    "logs": [],
+                    "processID": "p1",
+                    "warnings": null
+                },
+                {
+                    "traceID": "61085bda55888d292283502aafdca1f7",
+                    "spanID": "7a60e408eb0d3952",
+                    "operationName": "agent_runtime ack",
+                    "references": [
+                        {
+                            "refType": "CHILD_OF",
+                            "traceID": "61085bda55888d292283502aafdca1f7",
+                            "spanID": "925d222cae14e00f"
+                        },
+                        {
+                            "refType": "FOLLOWS_FROM",
+                            "traceID": "61085bda55888d292283502aafdca1f7",
+                            "spanID": "d0ea60f19133210b"
+                        }
+                    ],
+                    "startTime": 1750692445318039,
+                    "duration": 24,
+                    "tags": [
+                        {
+                            "key": "messaging.destination",
+                            "type": "string",
+                            "value": ""
+                        },
+                        {
+                            "key": "messaging.operation",
+                            "type": "string",
+                            "value": "receive"
+                        },
+                        {
+                            "key": "otel.scope.name",
+                            "type": "string",
+                            "value": "agent_runtime InProcessRuntime"
+                        },
+                        {
+                            "key": "span.kind",
+                            "type": "string",
+                            "value": "consumer"
+                        }
+                    ],
+                    "logs": [],
+                    "processID": "p1",
+                    "warnings": null
+                },
+                {
+                    "traceID": "61085bda55888d292283502aafdca1f7",
+                    "spanID": "24bbeb17cbc83101",
+                    "operationName": "chat.streaming_completions gpt-4o",
+                    "references": [
+                        {
+                            "refType": "CHILD_OF",
+                            "traceID": "61085bda55888d292283502aafdca1f7",
+                            "spanID": "81037d45148b5e87"
+                        }
+                    ],
+                    "startTime": 1750692448333379,
+                    "duration": 8308280,
+                    "tags": [
+                        {
+                            "key": "gen_ai.operation.name",
+                            "type": "string",
+                            "value": "chat.streaming_completions"
+                        },
+                        {
+                            "key": "gen_ai.request.model",
+                            "type": "string",
+                            "value": "gpt-4o"
+                        },
+                        {
+                            "key": "gen_ai.response.finish_reason",
+                            "type": "string",
+                            "value": "FinishReason.TOOL_CALLS"
+                        },
+                        {
+                            "key": "gen_ai.response.id",
+                            "type": "string",
+                            "value": "chatcmpl-BldMvDbZ411T9rs2IfnQOEOL2L3Ja"
+                        },
+                        {
+                            "key": "gen_ai.system",
+                            "type": "string",
+                            "value": "openai"
+                        },
+                        {
+                            "key": "gen_ai.usage.input_tokens",
+                            "type": "int64",
+                            "value": 236
+                        },
+                        {
+                            "key": "gen_ai.usage.output_tokens",
+                            "type": "int64",
+                            "value": 571
+                        },
+                        {
+                            "key": "otel.scope.name",
+                            "type": "string",
+                            "value": "semantic_kernel.utils.telemetry.model_diagnostics.decorators"
+                        },
+                        {
+                            "key": "server.address",
+                            "type": "string",
+                            "value": "https://ai-naarkalgaihub999971652049.openai.azure.com/openai/deployments/gpt-4o/"
+                        },
+                        {
+                            "key": "span.kind",
+                            "type": "string",
+                            "value": "internal"
+                        }
+                    ],
+                    "logs": [],
+                    "processID": "p1",
+                    "warnings": null
+                },
+                {
+                    "traceID": "61085bda55888d292283502aafdca1f7",
+                    "spanID": "f446412a0453b99a",
+                    "operationName": "streaming_message_final",
+                    "references": [
+                        {
+                            "refType": "CHILD_OF",
+                            "traceID": "61085bda55888d292283502aafdca1f7",
+                            "spanID": "81037d45148b5e87"
+                        }
+                    ],
+                    "startTime": 1750692456651421,
+                    "duration": 19,
+                    "tags": [
+                        {
+                            "key": "gen_ai.memory.operation_type",
+                            "type": "string",
+                            "value": "write"
+                        },
+                        {
+                            "key": "gen_ai.memory.source_type",
+                            "type": "string",
+                            "value": "streaming_response"
+                        },
+                        {
+                            "key": "gen_ai.operation.name",
+                            "type": "string",
+                            "value": "memory_operation"
+                        },
+                        {
+                            "key": "message.agent_name",
+                            "type": "string",
+                            "value": "planner"
+                        },
+                        {
+                            "key": "message.content_length",
+                            "type": "int64",
+                            "value": 1897
+                        },
+                        {
+                            "key": "message.processing_complete",
+                            "type": "bool",
+                            "value": true
+                        },
+                        {
+                            "key": "otel.scope.name",
+                            "type": "string",
+                            "value": "__main__"
+                        },
+                        {
+                            "key": "span.kind",
+                            "type": "string",
+                            "value": "internal"
+                        }
+                    ],
+                    "logs": [],
+                    "processID": "p1",
+                    "warnings": null
+                },
+                {
+                    "traceID": "61085bda55888d292283502aafdca1f7",
+                    "spanID": "96d822e147c35c93",
+                    "operationName": "chat.streaming_completions gpt-4o",
+                    "references": [
+                        {
+                            "refType": "CHILD_OF",
+                            "traceID": "61085bda55888d292283502aafdca1f7",
+                            "spanID": "81037d45148b5e87"
+                        }
+                    ],
+                    "startTime": 1750692457276123,
+                    "duration": 5790119,
+                    "tags": [
+                        {
+                            "key": "gen_ai.operation.name",
+                            "type": "string",
+                            "value": "chat.streaming_completions"
+                        },
+                        {
+                            "key": "gen_ai.request.model",
+                            "type": "string",
+                            "value": "gpt-4o"
+                        },
+                        {
+                            "key": "gen_ai.response.finish_reason",
+                            "type": "string",
+                            "value": "FinishReason.STOP"
+                        },
+                        {
+                            "key": "gen_ai.response.id",
+                            "type": "string",
+                            "value": "chatcmpl-BldN3cSqO3nI3sBY86OiJTa1jVrdR"
+                        },
+                        {
+                            "key": "gen_ai.system",
+                            "type": "string",
+                            "value": "openai"
+                        },
+                        {
+                            "key": "gen_ai.usage.input_tokens",
+                            "type": "int64",
+                            "value": 651
+                        },
+                        {
+                            "key": "gen_ai.usage.output_tokens",
+                            "type": "int64",
+                            "value": 608
+                        },
+                        {
+                            "key": "otel.scope.name",
+                            "type": "string",
+                            "value": "semantic_kernel.utils.telemetry.model_diagnostics.decorators"
+                        },
+                        {
+                            "key": "server.address",
+                            "type": "string",
+                            "value": "https://ai-naarkalgaihub999971652049.openai.azure.com/openai/deployments/gpt-4o/"
+                        },
+                        {
+                            "key": "span.kind",
+                            "type": "string",
+                            "value": "internal"
+                        }
+                    ],
+                    "logs": [],
+                    "processID": "p1",
+                    "warnings": null
+                },
+                {
+                    "traceID": "61085bda55888d292283502aafdca1f7",
+                    "spanID": "ca22d07e021852d4",
+                    "operationName": "agent_runtime publish f7c53bd04cfc432a871a031cb575ccb6.(default)-T",
+                    "references": [
+                        {
+                            "refType": "CHILD_OF",
+                            "traceID": "61085bda55888d292283502aafdca1f7",
+                            "spanID": "925d222cae14e00f"
+                        },
+                        {
+                            "refType": "FOLLOWS_FROM",
+                            "traceID": "61085bda55888d292283502aafdca1f7",
+                            "spanID": "2cc3b6a0c0a59ed1"
+                        }
+                    ],
+                    "startTime": 1750692463081073,
+                    "duration": 5056121,
+                    "tags": [
+                        {
+                            "key": "messaging.destination",
+                            "type": "string",
+                            "value": "f7c53bd04cfc432a871a031cb575ccb6.(default)-T"
+                        },
+                        {
+                            "key": "messaging.operation",
+                            "type": "string",
+                            "value": "publish"
+                        },
+                        {
+                            "key": "otel.scope.name",
+                            "type": "string",
+                            "value": "agent_runtime InProcessRuntime"
+                        },
+                        {
+                            "key": "span.kind",
+                            "type": "string",
+                            "value": "producer"
+                        }
+                    ],
+                    "logs": [],
+                    "processID": "p1",
+                    "warnings": null
+                },
+                {
+                    "traceID": "61085bda55888d292283502aafdca1f7",
+                    "spanID": "b19b7bab44c28697",
+                    "operationName": "agent_runtime process planner_f7c53bd04cfc432a871a031cb575ccb6.(default)-A",
+                    "references": [
+                        {
+                            "refType": "CHILD_OF",
+                            "traceID": "61085bda55888d292283502aafdca1f7",
+                            "spanID": "fc0f1a2f1974505b"
+                        },
+                        {
+                            "refType": "FOLLOWS_FROM",
+                            "traceID": "61085bda55888d292283502aafdca1f7",
+                            "spanID": "d6d9b9fb1a14a2df"
+                        }
+                    ],
+                    "startTime": 1750692445316849,
+                    "duration": 248,
+                    "tags": [
+                        {
+                            "key": "messaging.destination",
+                            "type": "string",
+                            "value": "planner_f7c53bd04cfc432a871a031cb575ccb6.(default)-A"
+                        },
+                        {
+                            "key": "messaging.operation",
+                            "type": "string",
+                            "value": "process"
+                        },
+                        {
+                            "key": "otel.scope.name",
+                            "type": "string",
+                            "value": "agent_runtime InProcessRuntime"
+                        },
+                        {
+                            "key": "span.kind",
+                            "type": "string",
+                            "value": "consumer"
+                        }
+                    ],
+                    "logs": [],
+                    "processID": "p1",
+                    "warnings": null
+                },
+                {
+                    "traceID": "61085bda55888d292283502aafdca1f7",
+                    "spanID": "103b3f8e4715f7a7",
+                    "operationName": "agent_runtime process GroupChatManagerActor_f7c53bd04cfc432a871a031cb575ccb6.(default)-A",
+                    "references": [
+                        {
+                            "refType": "CHILD_OF",
+                            "traceID": "61085bda55888d292283502aafdca1f7",
+                            "spanID": "b501db103cda6547"
+                        },
+                        {
+                            "refType": "FOLLOWS_FROM",
+                            "traceID": "61085bda55888d292283502aafdca1f7",
+                            "spanID": "09e27f78485cce5c"
+                        }
+                    ],
+                    "startTime": 1750692445318455,
+                    "duration": 3014309,
+                    "tags": [
+                        {
+                            "key": "messaging.destination",
+                            "type": "string",
+                            "value": "GroupChatManagerActor_f7c53bd04cfc432a871a031cb575ccb6.(default)-A"
+                        },
+                        {
+                            "key": "messaging.operation",
+                            "type": "string",
+                            "value": "process"
+                        },
+                        {
+                            "key": "otel.scope.name",
+                            "type": "string",
+                            "value": "agent_runtime InProcessRuntime"
+                        },
+                        {
+                            "key": "span.kind",
+                            "type": "string",
+                            "value": "consumer"
+                        }
+                    ],
+                    "logs": [],
+                    "processID": "p1",
+                    "warnings": null
+                },
+                {
+                    "traceID": "61085bda55888d292283502aafdca1f7",
+                    "spanID": "0c0408e8c9e2ecb7",
+                    "operationName": "agent_runtime process hotel_agent_f7c53bd04cfc432a871a031cb575ccb6.(default)-A",
+                    "references": [
+                        {
+                            "refType": "CHILD_OF",
+                            "traceID": "61085bda55888d292283502aafdca1f7",
+                            "spanID": "d46695dd34722922"
+                        },
+                        {
+                            "refType": "FOLLOWS_FROM",
+                            "traceID": "61085bda55888d292283502aafdca1f7",
+                            "spanID": "06740f12212eed23"
+                        }
+                    ],
+                    "startTime": 1750692448334100,
+                    "duration": 165,
+                    "tags": [
+                        {
+                            "key": "messaging.destination",
+                            "type": "string",
+                            "value": "hotel_agent_f7c53bd04cfc432a871a031cb575ccb6.(default)-A"
+                        },
+                        {
+                            "key": "messaging.operation",
+                            "type": "string",
+                            "value": "process"
+                        },
+                        {
+                            "key": "otel.scope.name",
+                            "type": "string",
+                            "value": "agent_runtime InProcessRuntime"
+                        },
+                        {
+                            "key": "span.kind",
+                            "type": "string",
+                            "value": "consumer"
+                        }
+                    ],
+                    "logs": [],
+                    "processID": "p1",
+                    "warnings": null
+                }
+            ],
+            "processes": {
+                "p1": {
+                    "serviceName": "otel-compare",
+                    "tags": [
+                        {
+                            "key": "deployment.environment",
+                            "type": "string",
+                            "value": "development"
+                        },
+                        {
+                            "key": "service.version",
+                            "type": "string",
+                            "value": "1.0.0"
+                        },
+                        {
+                            "key": "telemetry.sdk.language",
+                            "type": "string",
+                            "value": "python"
+                        },
+                        {
+                            "key": "telemetry.sdk.name",
+                            "type": "string",
+                            "value": "opentelemetry"
+                        },
+                        {
+                            "key": "telemetry.sdk.version",
+                            "type": "string",
+                            "value": "1.34.0"
+                        }
+                    ]
+                }
+            },
+            "warnings": null
+        }
+    ],
+    "total": 0,
+    "limit": 0,
+    "offset": 0,
+    "errors": null
+}

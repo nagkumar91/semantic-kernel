@@ -23,6 +23,11 @@ from semantic_kernel.contents.streaming_chat_message_content import StreamingCha
 from semantic_kernel.contents.utils.author_role import AuthorRole
 from semantic_kernel.kernel_pydantic import KernelBaseModel
 from semantic_kernel.utils.feature_stage_decorator import experimental
+from semantic_kernel.utils.telemetry.group_chat_diagnostics import (
+    trace_group_chat_agent_message,
+    trace_group_chat_manager_message,
+    trace_group_chat_orchestration,
+)
 
 if sys.version_info >= (3, 12):
     from typing import override  # pragma: no cover
@@ -103,6 +108,7 @@ class GroupChatAgentActor(AgentActorBase):
     """An agent actor that process messages in a group chat."""
 
     @message_handler
+    @trace_group_chat_agent_message("handle_start_message")
     async def _handle_start_message(self, message: GroupChatStartMessage, ctx: MessageContext) -> None:
         """Handle the start message for the group chat."""
         logger.debug(f"{self.id}: Received group chat start message.")
@@ -122,7 +128,9 @@ class GroupChatAgentActor(AgentActorBase):
             raise ValueError(f"Invalid message body type: {type(message.body)}. Expected {DefaultTypeAlias}.")
 
     @message_handler
+    @trace_group_chat_agent_message("handle_response_message")
     async def _handle_response_message(self, message: GroupChatResponseMessage, ctx: MessageContext) -> None:
+        """Handle response message from another agent."""
         logger.debug(f"{self.id}: Received group chat response message.")
         if self._agent_thread is not None:
             await self._agent_thread.on_new_message(message.body)
@@ -130,14 +138,16 @@ class GroupChatAgentActor(AgentActorBase):
             self._chat_history.add_message(message.body)
 
     @message_handler
+    @trace_group_chat_agent_message("invoke")
     async def _handle_request_message(self, message: GroupChatRequestMessage, ctx: MessageContext) -> None:
+        """Handle request message to invoke this agent."""
         if message.agent_name != self._agent.name:
             return
 
         logger.debug(f"{self.id}: Received group chat request message.")
-
+        
         response = await self._invoke_agent()
-
+        
         logger.debug(f"{self.id} responded with {response}.")
 
         await self.publish_message(
@@ -288,6 +298,7 @@ class GroupChatManagerActor(ActorBase):
         super().__init__(description="An actor for the group chat manager.")
 
     @message_handler
+    @trace_group_chat_manager_message("handle_start_message")
     async def _handle_start_message(self, message: GroupChatStartMessage, ctx: MessageContext) -> None:
         """Handle the start message for the group chat."""
         logger.debug(f"{self.id}: Received group chat start message.")
@@ -302,7 +313,9 @@ class GroupChatManagerActor(ActorBase):
         await self._determine_state_and_take_action(ctx.cancellation_token)
 
     @message_handler
+    @trace_group_chat_manager_message("handle_response_message")
     async def _handle_response_message(self, message: GroupChatResponseMessage, ctx: MessageContext) -> None:
+        """Handle response messages from agents in the group chat."""
         if message.body.role != AuthorRole.USER:
             self._chat_history.add_message(
                 ChatMessageContent(
@@ -314,6 +327,7 @@ class GroupChatManagerActor(ActorBase):
 
         await self._determine_state_and_take_action(ctx.cancellation_token)
 
+    @trace_group_chat_manager_message("determine_state_and_take_action")
     async def _determine_state_and_take_action(self, cancellation_token: CancellationToken) -> None:
         """Determine the state of the group chat and take action accordingly."""
         # User input state
@@ -419,6 +433,7 @@ class GroupChatOrchestration(OrchestrationBase[TIn, TOut]):
         )
 
     @override
+    @trace_group_chat_orchestration("start")
     async def _start(
         self,
         task: DefaultTypeAlias,
@@ -434,7 +449,6 @@ class GroupChatOrchestration(OrchestrationBase[TIn, TOut]):
         too slow), it might send a request to the next agent before the other actors
         have the necessary context.
         """
-
         async def send_start_message(agent: Agent) -> None:
             target_actor_id = await runtime.get(self._get_agent_actor_type(agent, internal_topic_type))
             await runtime.send_message(

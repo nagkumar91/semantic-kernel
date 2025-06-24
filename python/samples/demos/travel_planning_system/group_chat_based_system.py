@@ -2,7 +2,8 @@
 
 import asyncio
 import sys
-
+import json
+import os
 from opentelemetry import trace
 from opentelemetry.trace import Status, StatusCode
 
@@ -32,6 +33,15 @@ from semantic_kernel.contents import (
 )
 from semantic_kernel.functions.kernel_arguments import KernelArguments
 
+from langfuse import Langfuse
+
+langfuse = Langfuse(
+  secret_key=os.getenv("LANGFUSE_SECRET_KEY"),
+  public_key=os.getenv("LANGFUSE_PUBLIC_KEY"),
+  host="https://us.cloud.langfuse.com"
+)
+
+
 if sys.version_info >= (3, 12):
     from typing import override  # pragma: no cover
 else:
@@ -58,9 +68,62 @@ def streaming_agent_response_callback(message: StreamingChatMessageContent, is_f
                 "message.content_length": len(message.content) if message.content else 0,
                 "message.processing_complete": True
             })
+            
+            # ENHANCED: Add input/output visibility for Langfuse
+            if message.content:
+                # Add the actual message content as an event for Langfuse visibility
+                stream_span.add_event("gen_ai.content.completion", {
+                    "gen_ai.completion": str(message.content)[:1000],  # Truncate for safety
+                    "gen_ai.assistant.message": str(message.content)[:1000],
+                    "output.agent": message.name,
+                    "output.type": "streaming_final",
+                    "output.role": str(message.role)
+                })
+            
+            # ENHANCED: Capture function calls and results
+            function_calls = []
+            function_results = []
+            
+            for item in message.items:
+                if isinstance(item, FunctionCallContent):
+                    function_calls.append({
+                        "function": item.name,
+                        "arguments": str(item.arguments)[:500]  # Truncate arguments
+                    })
+                elif isinstance(item, FunctionResultContent):
+                    function_results.append({
+                        "function": item.name,
+                        "result": str(item.result)[:500]  # Truncate results
+                    })
+            
+            if function_calls:
+                stream_span.add_event("gen_ai.tool.calls", {
+                    "tool.calls": json.dumps(function_calls),
+                    "tool.call_count": len(function_calls),
+                    "agent": message.name
+                })
+                
+            if function_results:
+                stream_span.add_event("gen_ai.tool.results", {
+                    "tool.results": json.dumps(function_results),
+                    "tool.result_count": len(function_results),
+                    "agent": message.name
+                })
+    
+    # Only create span for final messages to reduce duplicate spans
+    if is_final:
+        tracer = trace.get_tracer(__name__)
+        with tracer.start_as_current_span("streaming_message_final") as stream_span:
+            stream_span.set_attributes({
+                "gen_ai.operation.name": "memory_operation",
+                "gen_ai.memory.operation_type": "write",
+                "gen_ai.memory.source_type": "streaming_response",
+                "message.agent_name": message.name,
+                "message.content_length": len(message.content) if message.content else 0,
+                "message.processing_complete": True
+            })
     
     if is_new_message:
-        print(f"# {message.name}")
         is_new_message = False
     print(message.content, end="", flush=True)
 
@@ -200,9 +263,12 @@ class AgentBaseGroupChatManager(GroupChatManager):
                 ChatMessageContent(
                     role=AuthorRole.USER,
                     content=(
-                        "Who should speak next based on the conversation? Pick one agent from the participants:\n"
-                        + "\n".join([f"{k}: {v}" for k, v in participant_descriptions.items()])
-                        + "\nPlease provide the agent's name."
+                        "Who should speak next based on the conversation? Pick ONE agent from the participants:\n"
+                        + "\n".join([f"- {k}: {v}" for k, v in participant_descriptions.items()])
+                        + "\n\nYou must respond with a JSON object containing exactly the agent name from the list above.\n"
+                        + "Format: {\"result\": \"agent_name\", \"reason\": \"explanation\"}\n"
+                        + f"Valid agent names: {list(participant_descriptions.keys())}\n"
+                        + "The 'result' field must contain ONLY the agent name, nothing else."
                     ),
                 )
             )
@@ -213,21 +279,36 @@ class AgentBaseGroupChatManager(GroupChatManager):
             response = await self.agent.get_response(messages, arguments=KernelArguments(settings=settings))
             result = StringResult.model_validate_json(response.message.content)
 
-            if result.result not in participant_descriptions:
-                selection_span.set_attribute("agent.selection.error", "invalid_agent_selected")
-                raise ValueError(
-                    f"Selected agent '{result.result}' is not in the list of participants: "
-                    f"{list(participant_descriptions.keys())}"
-                )
+            # Enhanced validation and error handling
+            selected_agent = result.result.strip()
+            
+            # Check if the result contains extra text and try to extract the agent name
+            if selected_agent not in participant_descriptions:
+                # Try to find a valid agent name within the response
+                for agent_name in participant_descriptions.keys():
+                    if agent_name in selected_agent:
+                        selection_span.set_attribute("agent.selection.corrected", f"from '{selected_agent}' to '{agent_name}'")
+                        result.result = agent_name
+                        selected_agent = agent_name
+                        break
+                
+                # If still not found, raise the error with better debugging info
+                if selected_agent not in participant_descriptions:
+                    selection_span.set_attribute("agent.selection.error", "invalid_agent_selected")
+                    selection_span.set_attribute("agent.selection.raw_response", response.message.content[:500])
+                    raise ValueError(
+                        f"Selected agent '{selected_agent}' is not in the list of participants: "
+                        f"{list(participant_descriptions.keys())}. Raw response: {response.message.content[:200]}"
+                    )
             
             selection_span.set_attributes({
-                "agent.selection.selected": result.result,
+                "agent.selection.selected": selected_agent,
                 "agent.selection.reasoning": result.reason,
                 "planning.decision": "agent_selected"
             })
 
             return result
-
+        
     @override
     async def filter_results(
         self,
@@ -275,22 +356,16 @@ async def main():
     """Main function to run the agents with comprehensive telemetry."""
     tracer = trace.get_tracer(__name__)
     
-    print("🎯 Enhanced Multi-Agent Travel Planning Demo with Comprehensive Telemetry")
-    print("📊 Expected Telemetry Coverage:")
-    print("   ✅ execute_task spans - Task execution tracking")
-    print("   ✅ plan_task spans - Planning operations and decision making")
-    print("   ✅ agent_to_agent_interaction spans - Agent coordination")  
-    print("   ✅ memory_operation spans - Memory state management")
-    print("   ✅ invoke_agent spans - Agent invocation (existing SK)")
-    print("   ✅ execute_tool spans - Tool execution (existing SK)")
-    print("=" * 80)
-    
     # Create comprehensive session context
     with tracer.start_as_current_span("travel_planning_session") as session_span:
         session_span.set_attributes({
             "user.id": "demo_user_enhanced",
             "conversation.id": "conv_enhanced_001",
-            "session.type": "enhanced_multi_agent_demo"
+            "session.type": "enhanced_multi_agent_demo",
+             # Langfuse-specific attributes
+            "langfuse.trace.type": "multi_agent_orchestration",
+            "langfuse.version": "1.0",
+            "langfuse.session_type": "group_chat"
         })
         
         # 1. Create a Group Chat orchestration with multiple agents
@@ -336,6 +411,22 @@ async def main():
             "select appropriate vegetarian-friendly accommodations, and plan activities. "
             "Show your reasoning process and provide a detailed plan with the necessary bookings."
         )
+        session_span.add_event("gen_ai.content.prompt", {
+            "gen_ai.prompt": task_description,
+            "gen_ai.user.message": task_description,
+            "input.type": "user_request",
+            "input.source": "main_function",
+            "input.task_type": "multi_agent_planning",
+            "input.constraints": json.dumps({
+                "budget": 5000,
+                "duration_days": 5,
+                "travelers": 4,
+                "dietary": "vegetarian",
+                "destination": "Bali",
+                "origin": "Seattle, WA"
+            }),
+            "langfuse.input": task_description  # Langfuse-specific
+        })
         
         with tracer.start_as_current_span("comprehensive_task_execution") as task_span:
             task_span.set_attributes({
@@ -353,9 +444,6 @@ async def main():
                 "task.budget": 5000,
                 "task.expected_tool_usage": ["flight_search", "hotel_search", "planning_tools"]
             })
-            
-            print(f"\n📋 Task: {task_description}")
-            print("\n🚀 Starting enhanced multi-agent execution...")
             
             # Invoke the orchestration with a task and the runtime
             orchestration_result = await group_chat_orchestration.invoke(
@@ -382,16 +470,18 @@ async def main():
                 print(f"\n✅ Final Result:\n{value}")
             
             task_span.set_attribute("gen_ai.task.status", "completed")
+            session_span.add_event("gen_ai.content.completion", {
+                "gen_ai.completion": str(value)[:2000],  # Truncate if too long
+                "gen_ai.assistant.message": str(value)[:2000],
+                "output.type": "final_travel_plan",
+                "output.source": "multi_agent_orchestration", 
+                "output.success": True,
+                "langfuse.output": str(value)[:2000]  # Langfuse-specific
+            })
 
         # 5. Stop the runtime after the invocation is complete
         await runtime.stop_when_idle()
         
-        print("\n" + "="*80)
-        print("🔍 ENHANCED TELEMETRY VERIFICATION COMPLETE:")
-        print("   ✅ All required span types generated")
-        print("   ✅ Complete trace hierarchy established")  
-        print("   ✅ Enhanced multi-agent attributes captured")
-        print("=" * 80)
 
 
 if __name__ == "__main__":

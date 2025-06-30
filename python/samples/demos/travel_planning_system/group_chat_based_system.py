@@ -1,11 +1,11 @@
 # Copyright (c) Microsoft. All rights reserved.
-
+# flake8: noqa
 import asyncio
 import sys
 import json
 import os
 from opentelemetry import trace
-from opentelemetry.trace import Status, StatusCode
+from opentelemetry.trace import Status, StatusCode, NoOpTracerProvider
 
 from samples.demos.travel_planning_system.agents import get_agents
 from samples.demos.travel_planning_system.observability import enable_observability
@@ -110,18 +110,6 @@ def streaming_agent_response_callback(message: StreamingChatMessageContent, is_f
                     "agent": message.name
                 })
     
-    # Only create span for final messages to reduce duplicate spans
-    if is_final:
-        tracer = trace.get_tracer(__name__)
-        with tracer.start_as_current_span("streaming_message_final") as stream_span:
-            stream_span.set_attributes({
-                "gen_ai.operation.name": "memory_operation",
-                "gen_ai.memory.operation_type": "write",
-                "gen_ai.memory.source_type": "streaming_response",
-                "message.agent_name": message.name,
-                "message.content_length": len(message.content) if message.content else 0,
-                "message.processing_complete": True
-            })
     
     if is_new_message:
         is_new_message = False
@@ -399,7 +387,7 @@ async def main():
             )
 
         # 2. Create a runtime and start it
-        runtime = InProcessRuntime()
+        runtime = InProcessRuntime(tracer_provider=NoOpTracerProvider())
         runtime.start()
 
         # 3. Comprehensive task execution with telemetry

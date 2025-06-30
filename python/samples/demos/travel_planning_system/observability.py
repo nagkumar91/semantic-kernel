@@ -11,17 +11,18 @@ from opentelemetry._logs import set_logger_provider
 from opentelemetry.sdk._logs import LoggerProvider, LoggingHandler
 from opentelemetry.sdk._logs.export import BatchLogRecordProcessor
 from opentelemetry.sdk.resources import Resource
-from opentelemetry.sdk.trace import TracerProvider
+from opentelemetry.sdk.trace import TracerProvider, ReadableSpan
 from opentelemetry.sdk.trace.export import BatchSpanProcessor
 from opentelemetry.semconv.resource import ResourceAttributes
 from opentelemetry.trace import set_tracer_provider
+from opentelemetry.trace import NoOpTracerProvider
 from opentelemetry.trace.span import format_trace_id
 from opentelemetry.exporter.otlp.proto.http.trace_exporter import OTLPSpanExporter
 
 if sys.version_info >= (3, 12):
-    pass  # pragma: no cover
+    from typing import override  # pragma: no cover
 else:
-    pass  # pragma: no cover
+    from typing_extensions import override  # pragma: no cover
 
 load_dotenv()
 
@@ -34,6 +35,7 @@ resource = Resource.create({
     ResourceAttributes.SERVICE_VERSION: "1.0.0",
     "deployment.environment": os.getenv("DEPLOYMENT_ENV", "development")
 })
+
 
 
 def set_up_logging():
@@ -74,13 +76,19 @@ def set_up_logging():
     logger.setLevel(logging.NOTSET)
 
 
-# class CustomBatchSpanProcessor(BatchSpanProcessor):
-#     @override
-#     def on_end(self, span: ReadableSpan):
-#         if span.name.startswith("agent_runtime"):
-#             # Skip spans that are part of the agent runtime.
-#             return
-#         super().on_end(span)
+class CustomBatchSpanProcessor(BatchSpanProcessor):
+    @override
+    def on_end(self, span: ReadableSpan):
+        if span.name.startswith("agent_runtime"):  # group_chat_manager
+            # Skip spans that are part of the agent runtime.
+            return
+        # Skip empty streaming message spans
+        if span.name == "streaming_message_final":
+            attributes = span.attributes or {}
+            content_length = attributes.get("message.content_length", 0)
+            if content_length == 0:
+                return
+        super().on_end(span)
 
 
 def set_up_tracing():
@@ -108,7 +116,8 @@ def set_up_tracing():
     
     # Add all available exporters
     for exporter in exporters:
-        tracer_provider.add_span_processor(BatchSpanProcessor(exporter))
+        # tracer_provider.add_span_processor(BatchSpanProcessor(exporter))
+        tracer_provider.add_span_processor(CustomBatchSpanProcessor(exporter))
     
     # Sets the global default tracer provider
     set_tracer_provider(tracer_provider)

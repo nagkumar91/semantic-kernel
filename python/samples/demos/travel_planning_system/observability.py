@@ -11,22 +11,31 @@ from opentelemetry._logs import set_logger_provider
 from opentelemetry.sdk._logs import LoggerProvider, LoggingHandler
 from opentelemetry.sdk._logs.export import BatchLogRecordProcessor
 from opentelemetry.sdk.resources import Resource
-from opentelemetry.sdk.trace import TracerProvider
+from opentelemetry.sdk.trace import TracerProvider, ReadableSpan
 from opentelemetry.sdk.trace.export import BatchSpanProcessor
 from opentelemetry.semconv.resource import ResourceAttributes
 from opentelemetry.trace import set_tracer_provider
+from opentelemetry.trace import NoOpTracerProvider
 from opentelemetry.trace.span import format_trace_id
+from opentelemetry.exporter.otlp.proto.http.trace_exporter import OTLPSpanExporter
 
 if sys.version_info >= (3, 12):
-    pass  # pragma: no cover
+    from typing import override  # pragma: no cover
 else:
-    pass  # pragma: no cover
+    from typing_extensions import override  # pragma: no cover
 
 load_dotenv()
 
-APPINSIGHTS_CONNECTION_STRING = os.getenv("APPINSIGHTS_CONNECTION_STRING")
+APPINSIGHTS_CONNECTION_STRING = os.getenv("APPLICATIONINSIGHTS_CONNECTION_STRING")
 
-resource = Resource.create({ResourceAttributes.SERVICE_NAME: "TravelPlanningSystemDemo"})
+# Create resource with service name from environment or default
+service_name = os.getenv("OTEL_SERVICE_NAME", "TravelPlanningSystemDemo")
+resource = Resource.create({
+    ResourceAttributes.SERVICE_NAME: service_name,
+    ResourceAttributes.SERVICE_VERSION: "1.0.0",
+    "deployment.environment": os.getenv("DEPLOYMENT_ENV", "development")
+})
+
 
 
 def set_up_logging():
@@ -67,27 +76,56 @@ def set_up_logging():
     logger.setLevel(logging.NOTSET)
 
 
-# class CustomBatchSpanProcessor(BatchSpanProcessor):
-#     @override
-#     def on_end(self, span: ReadableSpan):
-#         if span.name.startswith("agent_runtime"):
-#             # Skip spans that are part of the agent runtime.
-#             return
-#         super().on_end(span)
+class CustomBatchSpanProcessor(BatchSpanProcessor):
+    @override
+    def on_end(self, span: ReadableSpan):
+        if span.name.startswith("agent_runtime"):  # group_chat_manager
+            # Skip spans that are part of the agent runtime.
+            return
+        # Skip empty streaming message spans
+        if span.name == "streaming_message_final":
+            attributes = span.attributes or {}
+            content_length = attributes.get("message.content_length", 0)
+            if content_length == 0:
+                return
+        super().on_end(span)
 
 
 def set_up_tracing():
     exporters = []
-    exporters.append(AzureMonitorTraceExporter(connection_string=APPINSIGHTS_CONNECTION_STRING))
+    
+    # Add Azure Monitor exporter if connection string is available
+    if APPINSIGHTS_CONNECTION_STRING:
+        exporters.append(AzureMonitorTraceExporter(
+            connection_string=APPINSIGHTS_CONNECTION_STRING
+        ))
+        print("📊 Azure Monitor trace export enabled")
+    
+    # Add Jaeger/OTLP exporter for local development
+    jaeger_endpoint = os.getenv("OTEL_EXPORTER_OTLP_TRACES_ENDPOINT",
+                                "http://localhost:4318/v1/traces")
+    try:
+        otlp_exporter = OTLPSpanExporter(endpoint=jaeger_endpoint)
+        exporters.append(otlp_exporter)
+        print(f"📊 Jaeger/OTLP trace export enabled: {jaeger_endpoint}")
+    except Exception as e:
+        print(f"⚠️  Failed to initialize OTLP exporter: {e}")
 
-    # Initialize a trace provider for the application. This is a factory for creating tracers.
+    # Initialize a trace provider for the application
     tracer_provider = TracerProvider(resource=resource)
-    # Span processors are initialized with an exporter which is responsible
-    # for sending the telemetry data to a particular backend.
+    
+    # Add all available exporters
     for exporter in exporters:
-        tracer_provider.add_span_processor(BatchSpanProcessor(exporter))
+        # tracer_provider.add_span_processor(BatchSpanProcessor(exporter))
+        tracer_provider.add_span_processor(CustomBatchSpanProcessor(exporter))
+    
     # Sets the global default tracer provider
     set_tracer_provider(tracer_provider)
+    
+    if not exporters:
+        print("⚠️  No trace exporters configured - traces will not be sent")
+    else:
+        print(f"✅ Tracing initialized with {len(exporters)} exporter(s)")
 
 
 def enable_observability(func):

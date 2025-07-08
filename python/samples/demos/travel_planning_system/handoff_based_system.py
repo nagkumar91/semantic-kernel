@@ -17,11 +17,11 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Uncomment and configure if you want to use Langfuse
-langfuse = Langfuse(
-    secret_key=os.getenv("LANGFUSE_SECRET_KEY"),
-    public_key=os.getenv("LANGFUSE_PUBLIC_KEY"),
-    host="https://us.cloud.langfuse.com",
-)
+# langfuse = Langfuse(
+#     secret_key=os.getenv("LANGFUSE_SECRET_KEY"),
+#     public_key=os.getenv("LANGFUSE_PUBLIC_KEY"),
+#     host="https://us.cloud.langfuse.com",
+# )
 
 def agent_response_callback(message: ChatMessageContent) -> None:
     """Observer function to print the messages from the agents."""
@@ -31,6 +31,8 @@ def agent_response_callback(message: ChatMessageContent) -> None:
                 "gen_ai.operation.name": "agent_response_callback",
                 "gen_ai.agent.name": message.name,
                 "gen_ai.message.content": message.content,
+                "gen_ai.message.role": message.role.value,  # Add role
+                "gen_ai.message.length": len(message.content) if message.content else 0,  # Add length
             })
             span.add_event(
                 name="agent_message",

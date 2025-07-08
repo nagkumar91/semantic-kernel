@@ -34,6 +34,8 @@ resource = Resource.create({
     ResourceAttributes.SERVICE_NAME: service_name,
     ResourceAttributes.SERVICE_VERSION: "1.0.0",
     "deployment.environment": os.getenv("DEPLOYMENT_ENV", "development"),
+    "azure.monitor.agentic.pattern": "handoff_orchestration",  # Add for Azure Monitor
+
 })
 
 def set_up_logging():
@@ -73,8 +75,6 @@ class CustomBatchSpanProcessor(BatchSpanProcessor):
             content_length = attributes.get("message.content_length", 0)
             if content_length == 0:
                 return
-        if span.name == "agent_runtime ack":
-            return
         super().on_end(span)
 
 def set_up_tracing():

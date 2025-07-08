@@ -6,7 +6,8 @@ import logging
 import sys
 from collections.abc import Awaitable, Callable
 from functools import partial
-
+import time
+from flask import ctx
 from semantic_kernel.agents.agent import Agent
 from semantic_kernel.agents.orchestration.agent_actor_base import AgentActorBase
 from semantic_kernel.agents.orchestration.orchestration_base import DefaultTypeAlias, OrchestrationBase, TIn, TOut
@@ -30,7 +31,8 @@ from semantic_kernel.functions.kernel_parameter_metadata import KernelParameterM
 from semantic_kernel.functions.kernel_plugin import KernelPlugin
 from semantic_kernel.kernel_pydantic import KernelBaseModel
 from semantic_kernel.utils.feature_stage_decorator import experimental
-from opentelemetry import trace
+from opentelemetry import trace, context, baggage
+from opentelemetry.context import attach, detach
 
 tracer = trace.get_tracer(__name__)
 
@@ -171,7 +173,16 @@ class HandoffAgentActor(AgentActorBase):
                 "gen_ai.operation.name": "agent_to_agent_interaction",
                 "gen_ai.source_agent": self._agent.name,
                 "gen_ai.target_agent": agent_name,
+                "gen_ai.handoff.reason": "function_call",
             })
+            span.add_event(
+                name="handoff_initiated",
+                attributes={
+                    "from": self._agent.name,
+                    "to": agent_name,
+                    "reason": "transfer_function_called"
+                }
+            )
             logger.debug(f"{self.id}: Setting handoff agent name to {agent_name}.")
             self._handoff_agent_name = agent_name
 
@@ -225,12 +236,11 @@ class HandoffAgentActor(AgentActorBase):
         if message.agent_name != self._agent.name:
             return
         logger.debug(f"{self.id}: Received handoff request message.")
-        with tracer.start_as_current_span("handoff") as span:
-            span.set_attributes({
-                "gen_ai.operation.name": "handoff",
-                "gen_ai.handoff.from_agent": self._agent.name,
-                "gen_ai.handoff.to_agent": self._handoff_agent_name or "unknown",
-            })
+        
+        ctx = context.get_current()
+        token = attach(ctx)
+        
+        try:
             # Add plan_task span if this is the planner agent
             if self._agent.name == "planner":
                 with tracer.start_as_current_span("plan_task") as plan_span:
@@ -238,30 +248,50 @@ class HandoffAgentActor(AgentActorBase):
                         "gen_ai.operation.name": "plan_task",
                         "gen_ai.agent.name": self._agent.name,
                     })
+                    # Set baggage for cross-agent context
+                    baggage.set_baggage("orchestration.id", self.id.key)
+                    baggage.set_baggage("orchestration.task", "travel_planning")
+                    
                     response = await self._invoke_agent_with_potentially_no_response(kernel=self._kernel)
             else:
                 response = await self._invoke_agent_with_potentially_no_response(kernel=self._kernel)
-
+    
             while not self._task_completed:
                 if self._handoff_agent_name:
-                    await self.publish_message(
-                        HandoffRequestMessage(agent_name=self._handoff_agent_name),
-                        TopicId(self._internal_topic_type, self.id.key),
-                    )
-                    self._handoff_agent_name = None
+                    # THIS is where the actual handoff happens - from current agent to target agent
+                    with tracer.start_as_current_span("handoff") as handoff_span:
+                        handoff_span.set_attributes({
+                            "gen_ai.operation.name": "handoff",
+                            "gen_ai.handoff.from_agent": self._agent.name,
+                            "gen_ai.handoff.to_agent": self._handoff_agent_name,
+                            "gen_ai.handoff.reason": "transfer_function_called",
+                        })
+                        handoff_span.add_event(
+                            name="handoff_executed",
+                            attributes={
+                                "from": self._agent.name,
+                                "to": self._handoff_agent_name,
+                                "timestamp": str(time.time())
+                            }
+                        )
+                        await self.publish_message(
+                            HandoffRequestMessage(agent_name=self._handoff_agent_name),
+                            TopicId(self._internal_topic_type, self.id.key),
+                        )
+                        self._handoff_agent_name = None
                     break
-
+    
                 if response is None:
                     raise RuntimeError(
                         f'Agent "{self._agent.name}" did not return any response nor did not set a handoff agent name.'
                     )
-
+    
                 await self.publish_message(
                     HandoffResponseMessage(body=response),
                     TopicId(self._internal_topic_type, self.id.key),
                     cancellation_token=cts.cancellation_token,
                 )
-
+    
                 if self._human_response_function:
                     human_response = await self._call_human_response_function()
                     await self.publish_message(
@@ -278,7 +308,9 @@ class HandoffAgentActor(AgentActorBase):
                         task_summary="No handoff agent name provided and no human response function set. Ending task."
                     )
                     break
-
+        finally:
+            detach(token)
+    
     async def _call_human_response_function(self) -> ChatMessageContent:
         assert self._human_response_function  # nosec B101
         if inspect.iscoroutinefunction(self._human_response_function):

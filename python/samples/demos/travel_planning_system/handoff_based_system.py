@@ -152,25 +152,25 @@ async def main():
         })
 
         # Optionally, add a plan_task span for the planner agent
-        with tracer.start_as_current_span("plan_task") as plan_task_span:
-            plan_task_span.set_attributes({
-                "gen_ai.operation.name": "plan_task",
-                "gen_ai.agent.name": "planner"
-            })
-            # (If you want to explicitly invoke the planner here, do so.)
+        # with tracer.start_as_current_span("plan_task") as plan_task_span:
+        #     plan_task_span.set_attributes({
+        #         "gen_ai.operation.name": "plan_task",
+        #         "gen_ai.agent.name": "planner"
+        #     })
+        #     # (If you want to explicitly invoke the planner here, do so.)
 
         # Optionally, add an agent_to_agent_interaction span for the first handoff
-        with tracer.start_as_current_span("agent_to_agent_interaction") as agent_interaction_span:
-            agent_interaction_span.set_attributes({
-                "gen_ai.operation.name": "agent_to_agent_interaction",
-                "gen_ai.source_agent": "conversation_manager",
-                "gen_ai.target_agent": "planner"
-            })
+        # with tracer.start_as_current_span("agent_to_agent_interaction") as agent_interaction_span:
+        #     agent_interaction_span.set_attributes({
+        #         "gen_ai.operation.name": "agent_to_agent_interaction",
+        #         "gen_ai.source_agent": "conversation_manager",
+        #         "gen_ai.target_agent": "planner"
+        #     })
 
-            orchestration_result = await handoff_orchestration.invoke(
-                task=task_description,
-                runtime=runtime,
-            )
+        orchestration_result = await handoff_orchestration.invoke(
+            task=task_description,
+            runtime=runtime,
+        )
 
         value = await orchestration_result.get()
         print(value)

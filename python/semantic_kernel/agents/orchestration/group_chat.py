@@ -116,7 +116,6 @@ class GroupChatAgentActor(AgentActorBase):
     @message_handler
     async def _handle_start_message(self, message: GroupChatStartMessage, ctx: MessageContext) -> None:
         """Handle the start message for the group chat."""
-        logger.debug(f"{self.id}: Received group chat start message.")
         if isinstance(message.body, ChatMessageContent):
             if self._agent_thread:
                 await self._agent_thread.on_new_message(message.body)
@@ -135,7 +134,6 @@ class GroupChatAgentActor(AgentActorBase):
     @message_handler
     async def _handle_response_message(self, message: GroupChatResponseMessage, ctx: MessageContext) -> None:
         """Handle response messages."""
-        logger.debug(f"{self.id}: Received group chat response message.")
         if self._agent_thread is not None:
             await self._agent_thread.on_new_message(message.body)
         else:
@@ -146,11 +144,7 @@ class GroupChatAgentActor(AgentActorBase):
         if message.agent_name != self._agent.name:
             return
 
-        logger.debug(f"{self.id}: Received group chat request message.")
-
         response = await self._invoke_agent()
-
-        logger.debug(f"{self.id} responded with {response}.")
 
         await self.publish_message(
             GroupChatResponseMessage(body=response),
@@ -406,17 +400,6 @@ class RoundRobinGroupChatManager(GroupChatManager):
                 }
             )
             
-            # Log the selection
-            logger.debug(
-                f"Round-robin selected agent: {next_agent} (position {previous_index}/{len(agents)-1})",
-                extra={
-                    "gen_ai.interaction.source_agent_id": "round_robin_manager",
-                    "gen_ai.interaction.target_agent_id": next_agent,
-                    "gen_ai.interaction.message_type": "request",
-                    "gen_ai.interaction.pattern": "round_robin",
-                }
-            )
-            
             return StringResult(
                 result=next_agent, 
                 reason=f"Round-robin selection at position {previous_index}."
@@ -522,8 +505,6 @@ class GroupChatManagerActor(ActorBase):
                 "manager.actor_id": str(self.id),
                 "internal_topic": self._internal_topic_type,
             })
-            
-            logger.debug(f"{self.id}: Received group chat start message.")
             
             # Memory operation for storing initial messages
             with self._tracer.start_as_current_span("memory_operation") as memory_span:
@@ -678,8 +659,6 @@ class GroupChatManagerActor(ActorBase):
                     }
                 )
                 
-                logger.debug(f"Group chat manager requested user input. Reason: {should_request_user_input.reason}")
-                
                 # Get user input with interaction span
                 with self._tracer.start_as_current_span("agent_interaction") as user_span:
                     user_span.set_attributes({
@@ -717,9 +696,6 @@ class GroupChatManagerActor(ActorBase):
                     TopicId(self._internal_topic_type, self.id.key),
                     cancellation_token=cancellation_token,
                 )
-                logger.debug("User input received and added to chat history.")
-                # Return here so we don't select next agent immediately after user input
-                # return
 
             # Determine if the group chat should terminate
             should_terminate = await self._manager.should_terminate(self._chat_history.model_copy(deep=True))
@@ -733,8 +709,6 @@ class GroupChatManagerActor(ActorBase):
                         "total_messages": len(self._chat_history.messages),
                     }
                 )
-                
-                logger.debug(f"Group chat manager decided to terminate the group chat. Reason: {should_terminate.reason}")
                 
                 if self._result_callback:
                     # Filter results with memory operation
@@ -783,10 +757,6 @@ class GroupChatManagerActor(ActorBase):
                 }
             )
             
-            logger.debug(
-                f"Group chat manager selected agent: {next_agent.result} on round {self._manager.current_round}. "
-                f"Reason: {next_agent.reason}"
-            )
 
             # Publish request to next agent with interaction span
             with self._tracer.start_as_current_span("agent_interaction") as request_span:

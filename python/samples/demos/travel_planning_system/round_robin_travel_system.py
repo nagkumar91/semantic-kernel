@@ -11,7 +11,7 @@ import os
 import sys
 from datetime import datetime
 from typing import Optional
-
+os.environ['OTEL_SERVICE_NAME'] = "round_robin_travel_planning_system"
 from langfuse import Langfuse
 from opentelemetry import trace, baggage, context
 from opentelemetry.trace import Status, StatusCode, Link
@@ -35,11 +35,11 @@ from semantic_kernel.contents import (
 )
 
 # Initialize Langfuse
-# langfuse = Langfuse(
-#     secret_key=os.getenv("LANGFUSE_SECRET_KEY"),
-#     public_key=os.getenv("LANGFUSE_PUBLIC_KEY"),
-#     host="https://us.cloud.langfuse.com",
-# )
+langfuse = Langfuse(
+    secret_key=os.getenv("LANGFUSE_SECRET_KEY"),
+    public_key=os.getenv("LANGFUSE_PUBLIC_KEY"),
+    host="https://us.cloud.langfuse.com",
+)
 
 # Global flag for streaming messages
 is_new_message = True
@@ -140,7 +140,6 @@ def streaming_agent_response_callback(message: StreamingChatMessageContent, is_f
 
 def automated_response_function(chat_history: ChatHistory) -> ChatMessageContent:
     """Automated response function that doesn't require human input."""
-    print("\n🔔 DEBUG: automated_response_function called!")
     
     tracer = trace.get_tracer(__name__)
     

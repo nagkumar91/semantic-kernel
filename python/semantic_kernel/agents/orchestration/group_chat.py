@@ -133,8 +133,9 @@ class GroupChatAgentActor(AgentActorBase):
 
     @message_handler
     async def _handle_response_message(self, message: GroupChatResponseMessage, ctx: MessageContext) -> None:
-        """Handle response messages."""
-        if self._agent_thread is not None:
+        """Handle response messages by adding them to the chat history."""
+        # Simply add to chat history - no state determination needed here
+        if self._agent_thread:
             await self._agent_thread.on_new_message(message.body)
         else:
             self._chat_history.add_message(message.body)
@@ -145,7 +146,7 @@ class GroupChatAgentActor(AgentActorBase):
             return
 
         # Simplified span attributes (following Shipra's pattern)
-        with self._tracer.start_as_current_span("invoke-agent") as span:  # Note: use hyphen not underscore
+        with self._tracer.start_as_current_span("invoke-agent") as span:
             span.set_attributes({
                 "gen_ai.system": "semantic_kernel",
                 "gen_ai.agent.name": self._agent.name,
@@ -153,19 +154,24 @@ class GroupChatAgentActor(AgentActorBase):
             
             response = await self._invoke_agent()
             
-            # Simplified token tracking
+            # Fixed token tracking - handle both dict and object types
             if hasattr(response, 'metadata') and response.metadata and 'usage' in response.metadata:
                 usage = response.metadata['usage']
-                span.set_attribute("gen_ai.response.prompt_tokens", usage.get("prompt_tokens", 0))
-                span.set_attribute("gen_ai.response.completion_tokens", usage.get("completion_tokens", 0))
+                
+                # Check if usage is a dict or an object
+                if isinstance(usage, dict):
+                    span.set_attribute("gen_ai.response.prompt_tokens", usage.get("prompt_tokens", 0))
+                    span.set_attribute("gen_ai.response.completion_tokens", usage.get("completion_tokens", 0))
+                else:
+                    # It's an object (like CompletionUsage), access attributes directly
+                    span.set_attribute("gen_ai.response.prompt_tokens", getattr(usage, "prompt_tokens", 0))
+                    span.set_attribute("gen_ai.response.completion_tokens", getattr(usage, "completion_tokens", 0))
 
             await self.publish_message(
                 GroupChatResponseMessage(body=response),
                 TopicId(self._internal_topic_type, self.id.key),
                 cancellation_token=ctx.cancellation_token,
             )
-
-
 # endregion GroupChatAgentActor
 
 
@@ -519,15 +525,25 @@ class GroupChatManagerActor(ActorBase):
         """Handle response messages with tracing."""
         
         with self._tracer.start_as_current_span("handle-response") as span:
-            # Extract token usage
-            usage = {}
+            # Extract token usage - handle both dict and object types
+            prompt_tokens = 0
+            completion_tokens = 0
+            
             if hasattr(message.body, 'metadata') and message.body.metadata:
-                usage = message.body.metadata.get("usage", {})
+                usage = message.body.metadata.get("usage")
+                if usage:
+                    if isinstance(usage, dict):
+                        prompt_tokens = usage.get("prompt_tokens", 0)
+                        completion_tokens = usage.get("completion_tokens", 0)
+                    else:
+                        # Handle object type (CompletionUsage)
+                        prompt_tokens = getattr(usage, "prompt_tokens", 0)
+                        completion_tokens = getattr(usage, "completion_tokens", 0)
             
             span.set_attributes({
                 "gen_ai.system": "semantic_kernel",
-                "gen_ai.response.prompt_tokens": usage.get("prompt_tokens", 0),
-                "gen_ai.response.completion_tokens": usage.get("completion_tokens", 0),
+                "gen_ai.response.prompt_tokens": prompt_tokens,
+                "gen_ai.response.completion_tokens": completion_tokens,
                 "agent_name": message.body.name or "unknown",
             })
             

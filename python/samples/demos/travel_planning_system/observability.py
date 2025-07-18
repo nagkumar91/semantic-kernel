@@ -86,15 +86,13 @@ def set_up_tracing():
         except Exception as e:
             print(f"❌ Failed to initialize Azure Monitor exporter: {e}")
 
-    if not exporters:
-        print("⚠️ No trace exporters configured - traces will not be sent.")
-        try:
-            from opentelemetry.sdk.trace.export import ConsoleSpanExporter
-            exporters.append(ConsoleSpanExporter())
-            print("📊 Fallback: Console exporter enabled")
-        except Exception as e:
-            print(f"❌ Even console exporter failed: {e}")
-            return
+    try:
+        from opentelemetry.sdk.trace.export import ConsoleSpanExporter
+        exporters.append(ConsoleSpanExporter())
+        print("📊 Fallback: Console exporter enabled")
+    except Exception as e:
+        print(f"❌ Even console exporter failed: {e}")
+        return
     jaeger_endpoint = os.getenv("OTEL_EXPORTER_OTLP_TRACES_ENDPOINT",
                                 "http://localhost:4318/v1/traces")
     try:

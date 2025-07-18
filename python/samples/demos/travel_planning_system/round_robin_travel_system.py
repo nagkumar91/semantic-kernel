@@ -57,60 +57,25 @@ def streaming_agent_response_callback(message: StreamingChatMessageContent, is_f
     # Only create span for final messages to reduce duplicate spans (from Shipra's changes)
     if is_final and (message.content or message.items):
         tracer = trace.get_tracer(__name__)
-        with tracer.start_as_current_span("streaming_message_final") as stream_span:
+        with tracer.start_as_current_span("streaming-message-final") as stream_span:  # Use hyphen
             stream_span.set_attributes({
-                # Required OpenTelemetry attributes
-                "span.kind": "INTERNAL",
-                
-                # Required gen_ai attributes
-                "gen_ai.operation.name": "streaming_message_final",
                 "gen_ai.system": "semantic_kernel",
-                
-                # Agent information
                 "gen_ai.agent.name": message.name or "unknown",
-                "gen_ai.agent.id": message.name or "unknown",
-                
-                # Message attributes
                 "message.role": str(message.role),
-                "message.content_length": len(str(message.content)) if message.content else 0,
-                "message.has_function_calls": bool(any(isinstance(item, FunctionCallContent) for item in message.items)),
-                "message.has_function_results": bool(any(isinstance(item, FunctionResultContent) for item in message.items)),
             })
-            
-            # Add events for message content
-            if message.content:
-                stream_span.add_event(
-                    "gen_ai.assistant.message",
-                    {
-                        "gen_ai.system": "semantic_kernel",
-                        "content": str(message.content)[:1000],
-                        "role": "assistant",
-                        "agent_name": message.name,
-                    }
-                )
             
             # Track function calls and results
             for item in message.items:
                 if isinstance(item, FunctionCallContent):
-                    stream_span.add_event(
-                        "gen_ai.tool.message",
-                        {
-                            "gen_ai.system": "semantic_kernel",
-                            "tool_name": item.name,
-                            "tool_arguments": str(item.arguments)[:500],
-                            "role": "tool",
-                        }
-                    )
+                    stream_span.add_event("function_call", {
+                        "function_name": item.name,
+                        "arguments": str(item.arguments)[:500],
+                    })
                 elif isinstance(item, FunctionResultContent):
-                    stream_span.add_event(
-                        "gen_ai.tool.message", 
-                        {
-                            "gen_ai.system": "semantic_kernel",
-                            "tool_name": item.name,
-                            "tool_result": str(item.result)[:500],
-                            "role": "tool",
-                        }
-                    )
+                    stream_span.add_event("function_result", {
+                        "function_name": item.name,
+                        "result": str(item.result)[:500],
+                    })
     
     # Console output
     if is_new_message:
@@ -128,7 +93,6 @@ def streaming_agent_response_callback(message: StreamingChatMessageContent, is_f
     if is_final:
         print()
         is_new_message = True
-
 
 def human_response_function(chat_history: ChatHistory) -> ChatMessageContent:
     """Observer function to handle user input with telemetry."""
@@ -160,9 +124,8 @@ def automated_response_function(chat_history: ChatHistory) -> ChatMessageContent
     
     tracer = trace.get_tracer(__name__)
     
-    with tracer.start_as_current_span("automated_input") as span:
+    with tracer.start_as_current_span("automated-input") as span:  # Use hyphen
         span.set_attributes({
-            "gen_ai.operation.name": "automated_input",
             "gen_ai.system": "semantic_kernel",
             "chat.history_length": len(chat_history.messages),
             "interaction.type": "automated",
@@ -171,46 +134,46 @@ def automated_response_function(chat_history: ChatHistory) -> ChatMessageContent
         # Generate an automated response based on the last message
         last_message = chat_history.messages[-1] if chat_history.messages else None
         
-        # More comprehensive auto-responses
+        # Default response
         response = "Please continue with the planning."
         
         if last_message and last_message.content:
             content_lower = last_message.content.lower()
             
-            # Activity planning questions
-            if "activity planning" in content_lower or "proceed with the activity" in content_lower:
-                response = "Yes, please proceed with the activity planning. Include popular tourist attractions, cultural experiences, and dining recommendations."
-            elif "proceed with that" in content_lower or "make any adjustments" in content_lower:
-                response = "Yes, please proceed with the suggested plan. The budget allocation looks good."
-            elif "do you prefer" in content_lower:
-                response = "Please choose the cheapest flight options (FL123 at $200 each way) and Hotel Sunshine at $150/night for budget-friendly accommodation."
-            elif "would you like" in content_lower:
-                response = "Yes, please proceed with your recommendation."
-            elif "shall i proceed" in content_lower or "should i proceed" in content_lower:
-                response = "Yes, please proceed with the detailed planning."
-            elif "concurrently search" in content_lower or "will search" in content_lower:
-                response = "Yes, please go ahead and search for the flights and hotels."
-            elif "any preferences" in content_lower or "do you have" in content_lower:
-                response = "No specific preferences, please suggest the best options within the $4000 budget."
-            elif "is this acceptable" in content_lower or "does this work" in content_lower:
-                response = "Yes, that works well. Please continue."
-            elif "?" in content_lower:  # Any question
-                response = "Yes, please proceed with your recommendation. Choose the most cost-effective options."
+            # Check who sent the last message
+            if last_message.name:
+                agent_name = last_message.name.lower()
+                
+                # If planner just spoke, let flight agent continue
+                if "planner" in agent_name and ("flight" in content_lower or "next" in content_lower):
+                    response = "Flight agent, please analyze the flight options and make a recommendation based on the budget."
+                
+                # If flight agent should speak next
+                elif "flight agent" in content_lower or "flight recommendation" in content_lower:
+                    response = "Yes, please proceed with analyzing the flights and making recommendations."
+                
+                # If hotel agent should speak next
+                elif "hotel" in content_lower:
+                    response = "Hotel agent, please analyze the hotel options and make a recommendation."
+                
+                # General continuations
+                elif "?" in content_lower:
+                    response = "Yes, please proceed with your recommendation. Choose the most cost-effective options."
+                elif "recommendation" in content_lower:
+                    response = "Yes, that sounds good. Please continue with the next step."
+                elif "next" in content_lower:
+                    response = "Please continue with the planning process."
         
         print(f"🤖 Auto-response: {response}")
         
-        span.add_event(
-            "gen_ai.user.message",
-            {
-                "gen_ai.system": "semantic_kernel",
-                "content": response,
-                "role": "user",
-                "is_automated": True,
-            }
-        )
+        span.add_event("gen_ai.user.message", {
+            "gen_ai.system": "semantic_kernel",
+            "content": response,
+            "role": "user",
+            "is_automated": True,
+        })
         
         return ChatMessageContent(role=AuthorRole.USER, content=response)
-
 
 @enable_observability
 async def main():
@@ -224,7 +187,7 @@ async def main():
     context.attach(tokens)
     
     # Root span for the entire session
-    with tracer.start_as_current_span("round_robin_travel_planning_session") as session_span:
+    with tracer.start_as_current_span("round-robin-travel-planning-session") as session_span:
         # Set resource attributes
         session_span.set_attributes({
             # Required OpenTelemetry attributes
@@ -296,7 +259,7 @@ async def main():
         )
         
         # Execute task with comprehensive task execution span
-        with tracer.start_as_current_span("execute_task") as task_span:
+        with tracer.start_as_current_span("execute-task") as task_span:
             # Set traceparent for W3C context propagation
             traceparent = create_traceparent()
             
@@ -305,7 +268,6 @@ async def main():
                 "span.kind": "INTERNAL",
                 
                 # Required gen_ai attributes
-                "gen_ai.operation.name": "execute_task",
                 "gen_ai.system": "semantic_kernel",
                 
                 # Required task attributes
@@ -341,10 +303,9 @@ async def main():
             
             try:
                 # Planning span for initial task planning
-                with tracer.start_as_current_span("plan_task") as planning_span:
+                with tracer.start_as_current_span("plan-task") as planning_span:
                     planning_span.set_attributes({
                         # Required attributes
-                        "gen_ai.operation.name": "plan_task",
                         "gen_ai.system": "semantic_kernel",
                         "gen_ai.planning.type": "planning",
                         "gen_ai.planning.complexity": "complex",
@@ -382,17 +343,16 @@ async def main():
                             task=task_description,
                             runtime=runtime,
                         ),
-                        timeout=120.0  # 120 second timeout
+                        timeout=300
                     )
                 except asyncio.TimeoutError:
-                    print("\n❌ ERROR: Orchestration timed out after 120 seconds")
+                    print("\n❌ ERROR: Orchestration timed out after 300 seconds")
                     task_span.set_status(Status(StatusCode.ERROR, "Timeout"))
                     raise
 
                 # Memory operation for storing final result
-                with tracer.start_as_current_span("memory_operation") as result_span:
+                with tracer.start_as_current_span("memory-operation") as result_span:
                     result_span.set_attributes({
-                        "gen_ai.operation.name": "memory_operation",
                         "gen_ai.system": "semantic_kernel",
                         "gen_ai.memory.operation_type": "write",
                         "gen_ai.memory.agent_id": "orchestrator",

@@ -54,38 +54,32 @@ def streaming_agent_response_callback(message: StreamingChatMessageContent, is_f
     """Enhanced callback with comprehensive tracing for streaming responses."""
     global is_new_message
     
+    # Only create span for final messages to reduce duplicate spans (from Shipra's changes)
     if is_final and (message.content or message.items):
         tracer = trace.get_tracer(__name__)
-        
-        # Memory operation span for storing the streaming response
-        with tracer.start_as_current_span("memory_operation") as memory_span:
-            memory_span.set_attributes({
+        with tracer.start_as_current_span("streaming_message_final") as stream_span:
+            stream_span.set_attributes({
                 # Required OpenTelemetry attributes
                 "span.kind": "INTERNAL",
                 
                 # Required gen_ai attributes
-                "gen_ai.operation.name": "memory_operation",
+                "gen_ai.operation.name": "streaming_message_final",
                 "gen_ai.system": "semantic_kernel",
                 
-                # Required memory operation attributes
-                "gen_ai.memory.operation_type": "write",
-                "gen_ai.memory.agent_id": message.name or "unknown",
+                # Agent information
+                "gen_ai.agent.name": message.name or "unknown",
+                "gen_ai.agent.id": message.name or "unknown",
                 
-                # Recommended attributes
-                "gen_ai.memory.source_type": "streaming_response",
-                "gen_ai.memory.memory_type": "working",
-                "gen_ai.memory.size_bytes": len(str(message.content)) if message.content else 0,
-                
-                # Additional context
-                "gen_ai.agent.name": message.name,
+                # Message attributes
                 "message.role": str(message.role),
+                "message.content_length": len(str(message.content)) if message.content else 0,
                 "message.has_function_calls": bool(any(isinstance(item, FunctionCallContent) for item in message.items)),
                 "message.has_function_results": bool(any(isinstance(item, FunctionResultContent) for item in message.items)),
             })
             
-            # Add events for message content (for Langfuse visibility)
+            # Add events for message content
             if message.content:
-                memory_span.add_event(
+                stream_span.add_event(
                     "gen_ai.assistant.message",
                     {
                         "gen_ai.system": "semantic_kernel",
@@ -98,7 +92,7 @@ def streaming_agent_response_callback(message: StreamingChatMessageContent, is_f
             # Track function calls and results
             for item in message.items:
                 if isinstance(item, FunctionCallContent):
-                    memory_span.add_event(
+                    stream_span.add_event(
                         "gen_ai.tool.message",
                         {
                             "gen_ai.system": "semantic_kernel",
@@ -108,7 +102,7 @@ def streaming_agent_response_callback(message: StreamingChatMessageContent, is_f
                         }
                     )
                 elif isinstance(item, FunctionResultContent):
-                    memory_span.add_event(
+                    stream_span.add_event(
                         "gen_ai.tool.message", 
                         {
                             "gen_ai.system": "semantic_kernel",
@@ -136,6 +130,29 @@ def streaming_agent_response_callback(message: StreamingChatMessageContent, is_f
         is_new_message = True
 
 
+def human_response_function(chat_history: ChatHistory) -> ChatMessageContent:
+    """Observer function to handle user input with telemetry."""
+    tracer = trace.get_tracer(__name__)
+    with tracer.start_as_current_span("human_in_the_loop") as span:
+        span.set_attributes({
+            "gen_ai.operation.name": "human_in_the_loop",
+            "gen_ai.system": "semantic_kernel",
+            "chat.history_length": len(chat_history.messages),
+            "interaction.type": "manual",
+        })
+        
+        user_input = input("User: ")
+        
+        span.add_event(
+            "gen_ai.user.message",
+            {
+                "gen_ai.system": "semantic_kernel",
+                "content": user_input,
+                "role": "user",
+            }
+        )
+        
+        return ChatMessageContent(role=AuthorRole.USER, content=user_input)
 
 
 def automated_response_function(chat_history: ChatHistory) -> ChatMessageContent:
@@ -148,6 +165,7 @@ def automated_response_function(chat_history: ChatHistory) -> ChatMessageContent
             "gen_ai.operation.name": "automated_input",
             "gen_ai.system": "semantic_kernel",
             "chat.history_length": len(chat_history.messages),
+            "interaction.type": "automated",
         })
         
         # Generate an automated response based on the last message
@@ -194,8 +212,6 @@ def automated_response_function(chat_history: ChatHistory) -> ChatMessageContent
         return ChatMessageContent(role=AuthorRole.USER, content=response)
 
 
-
-
 @enable_observability
 async def main():
     """Main function demonstrating round-robin orchestration with comprehensive tracing."""
@@ -239,7 +255,7 @@ async def main():
         # Create round-robin orchestration
         print("🔄 Creating Round-Robin Group Chat Orchestration")
         print(f"   Agents: {', '.join([a.name for a in [agents['planner'], agents['flight_agent'], agents['hotel_agent']]])}")
-        print(f"   Max rounds: 15 (5 rounds per agent)")
+        print(f"   Max rounds: 12 (4 rounds per agent)")
         print("   Pattern: Each agent speaks in turn\n")
         
         group_chat_orchestration = GroupChatOrchestration(
@@ -311,9 +327,9 @@ async def main():
                 "traceparent": traceparent,
                 
                 # Additional context
-                "orchestration.max_rounds": 15,
+                "orchestration.max_rounds": 12,
                 "orchestration.agents_count": 3,
-                "orchestration.expected_turns_per_agent": 5,
+                "orchestration.expected_turns_per_agent": 4,
             })
             
             print(f"📋 Task: {task_description}\n")
@@ -355,10 +371,11 @@ async def main():
                         {
                             "decision": "Use round-robin to ensure equal participation",
                             "agent_order": "planner -> flight_agent -> hotel_agent",
-                            "expected_iterations": 5,
+                            "expected_iterations": 4,
                         }
                     )
-                import asyncio
+                
+                # Execute with timeout
                 try:
                     orchestration_result = await asyncio.wait_for(
                         group_chat_orchestration.invoke(
@@ -369,6 +386,7 @@ async def main():
                     )
                 except asyncio.TimeoutError:
                     print("\n❌ ERROR: Orchestration timed out after 120 seconds")
+                    task_span.set_status(Status(StatusCode.ERROR, "Timeout"))
                     raise
 
                 # Memory operation for storing final result

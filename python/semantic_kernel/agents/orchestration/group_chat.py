@@ -144,13 +144,26 @@ class GroupChatAgentActor(AgentActorBase):
         if message.agent_name != self._agent.name:
             return
 
-        response = await self._invoke_agent()
+        # Simplified span attributes (following Shipra's pattern)
+        with self._tracer.start_as_current_span("invoke-agent") as span:  # Note: use hyphen not underscore
+            span.set_attributes({
+                "gen_ai.system": "semantic_kernel",
+                "gen_ai.agent.name": self._agent.name,
+            })
+            
+            response = await self._invoke_agent()
+            
+            # Simplified token tracking
+            if hasattr(response, 'metadata') and response.metadata and 'usage' in response.metadata:
+                usage = response.metadata['usage']
+                span.set_attribute("gen_ai.response.prompt_tokens", usage.get("prompt_tokens", 0))
+                span.set_attribute("gen_ai.response.completion_tokens", usage.get("completion_tokens", 0))
 
-        await self.publish_message(
-            GroupChatResponseMessage(body=response),
-            TopicId(self._internal_topic_type, self.id.key),
-            cancellation_token=ctx.cancellation_token,
-        )
+            await self.publish_message(
+                GroupChatResponseMessage(body=response),
+                TopicId(self._internal_topic_type, self.id.key),
+                cancellation_token=ctx.cancellation_token,
+            )
 
 
 # endregion GroupChatAgentActor
@@ -240,8 +253,8 @@ class RoundRobinGroupChatManager(GroupChatManager):
     @override
     async def should_request_user_input(self, chat_history: ChatHistory) -> BooleanResult:
         """Check if the group chat should request user input with tracing."""
-        with self._tracer.start_as_current_span("plan_task") as span:
-            # Check if the last message contains a question
+        with self._tracer.start_as_current_span("should-request-user-input") as span:
+            # Simplified logic
             should_ask = False
             reason = "Round-robin manager checking for questions"
             
@@ -251,50 +264,19 @@ class RoundRobinGroupChatManager(GroupChatManager):
                     should_ask = True
                     reason = "Agent asked a question requiring user input"
             
-            # Set required attributes
+            # Simplified attributes
             span.set_attributes({
-                # Required gen_ai attributes
-                "gen_ai.operation.name": "plan_task",
                 "gen_ai.system": "semantic_kernel",
-                
-                # Required planning attributes
-                "gen_ai.planning.type": "decision",
-                "gen_ai.planning.complexity": "simple",
-                
-                # Conditionally required for decision
-                "gen_ai.decision.category": "flow_control",
-                "gen_ai.decision.outcome": "user_input_needed" if should_ask else "no_user_input_needed",
-                
-                # Recommended
-                "gen_ai.planning.reasoning": reason,
-                "gen_ai.planning.iteration": self.current_round,
-                
-                # Context
-                "chat.history_length": len(chat_history.messages),
-                "manager.type": "round_robin",
-                "has_question": should_ask,
+                "decision": "user_input_needed" if should_ask else "no_user_input_needed",
+                "chat_history_length": len(chat_history.messages),
             })
             
-            # Add decision event
-            span.add_event(
-                "decision_made",
-                {
-                    "decision_type": "user_input_request",
-                    "result": should_ask,
-                    "reason": reason,
-                }
-            )
-            
-            return BooleanResult(
-                result=should_ask,
-                reason=reason,
-            )
-
+            return BooleanResult(result=should_ask, reason=reason)
 
     @override
     async def should_terminate(self, chat_history: ChatHistory) -> BooleanResult:
         """Check if the group chat should terminate with comprehensive tracing."""
-        with self._tracer.start_as_current_span("plan_task") as span:
+        with self._tracer.start_as_current_span("plan-task") as span:
             # Increment round counter
             self.current_round += 1
             
@@ -309,7 +291,6 @@ class RoundRobinGroupChatManager(GroupChatManager):
             # Set span attributes
             span.set_attributes({
                 # Required gen_ai attributes
-                "gen_ai.operation.name": "plan_task", 
                 "gen_ai.system": "semantic_kernel",
                 
                 # Required planning attributes
@@ -354,7 +335,7 @@ class RoundRobinGroupChatManager(GroupChatManager):
         participant_descriptions: dict[str, str],
     ) -> StringResult:
         """Select the next agent to speak with comprehensive tracing."""
-        with self._tracer.start_as_current_span("plan_task") as span:
+        with self._tracer.start_as_current_span("plan-task") as span:
             # Get the next agent in round-robin order
             agents = list(participant_descriptions.keys())
             next_agent = agents[self.current_index]
@@ -364,7 +345,6 @@ class RoundRobinGroupChatManager(GroupChatManager):
             # Set span attributes
             span.set_attributes({
                 # Required gen_ai attributes
-                "gen_ai.operation.name": "plan_task",
                 "gen_ai.system": "semantic_kernel",
                 
                 # Required planning attributes  
@@ -411,14 +391,13 @@ class RoundRobinGroupChatManager(GroupChatManager):
         chat_history: ChatHistory,
     ) -> MessageResult:
         """Filter the results of the group chat with memory operation tracing."""
-        with self._tracer.start_as_current_span("memory_operation") as span:
+        with self._tracer.start_as_current_span("memory-operation") as span:
             # Get the last message as the result
             last_message = chat_history.messages[-1] if chat_history.messages else None
             
             # Set span attributes
             span.set_attributes({
                 # Required gen_ai attributes
-                "gen_ai.operation.name": "memory_operation",
                 "gen_ai.system": "semantic_kernel",
                 
                 # Required memory attributes
@@ -485,10 +464,9 @@ class GroupChatManagerActor(ActorBase):
     @message_handler
     async def _handle_start_message(self, message: GroupChatStartMessage, ctx: MessageContext) -> None:
         """Handle the start message for the group chat with comprehensive tracing."""
-        with self._tracer.start_as_current_span("agent_interaction") as span:
+        with self._tracer.start_as_current_span("agent-interaction") as span:
             span.set_attributes({
                 # Required attributes
-                "gen_ai.operation.name": "agent_interaction",
                 "gen_ai.system": "semantic_kernel",
                 
                 # Required interaction attributes
@@ -507,9 +485,8 @@ class GroupChatManagerActor(ActorBase):
             })
             
             # Memory operation for storing initial messages
-            with self._tracer.start_as_current_span("memory_operation") as memory_span:
+            with self._tracer.start_as_current_span("memory-operation") as memory_span:
                 memory_span.set_attributes({
-                    "gen_ai.operation.name": "memory_operation",
                     "gen_ai.system": "semantic_kernel",
                     "gen_ai.memory.operation_type": "write",
                     "gen_ai.memory.agent_id": "group_chat_manager",
@@ -539,95 +516,39 @@ class GroupChatManagerActor(ActorBase):
     
     @message_handler
     async def _handle_response_message(self, message: GroupChatResponseMessage, ctx: MessageContext) -> None:
-        """Handle response messages with comprehensive tracing."""
+        """Handle response messages with tracing."""
         
-        with self._tracer.start_as_current_span("agent_interaction") as span:
-            # Fix the token usage extraction
-            usage = message.body.metadata.get("usage") if message.body.metadata else None
-            prompt_tokens = 0
-            completion_tokens = 0
-            
-            if usage:
-                # Handle both dict and object cases
-                if isinstance(usage, dict):
-                    prompt_tokens = usage.get("prompt_tokens", 0)
-                    completion_tokens = usage.get("completion_tokens", 0)
-                else:
-                    # It's a CompletionUsage object
-                    prompt_tokens = getattr(usage, "prompt_tokens", 0)
-                    completion_tokens = getattr(usage, "completion_tokens", 0)
+        with self._tracer.start_as_current_span("handle-response") as span:
+            # Extract token usage
+            usage = {}
+            if hasattr(message.body, 'metadata') and message.body.metadata:
+                usage = message.body.metadata.get("usage", {})
             
             span.set_attributes({
-                # Required attributes
-                "gen_ai.operation.name": "agent_interaction",
                 "gen_ai.system": "semantic_kernel",
-                
-                # Required interaction attributes
-                "gen_ai.interaction.type": "response",
-                "gen_ai.interaction.source_agent_id": message.body.name or ("human" if message.body.role == AuthorRole.USER else "unknown"),
-                "gen_ai.interaction.target_agent_id": "group_chat_manager",
-                
-                # Recommended attributes
-                "gen_ai.interaction.message_type": "user_response" if message.body.role == AuthorRole.USER else "agent_response",
-                "gen_ai.interaction.pattern": "orchestration",
-                "gen_ai.interaction.is_async": True,
-                "gen_ai.interaction.duration_ms": 0,  # Would be set by actual timing
-                
-                # Optional attributes
-                "gen_ai.interaction.tokens.input": prompt_tokens,
-                "gen_ai.interaction.tokens.output": completion_tokens,
-                
-                # Context
-                "response.role": str(message.body.role),
-                "response.has_content": bool(message.body.content),
+                "gen_ai.response.prompt_tokens": usage.get("prompt_tokens", 0),
+                "gen_ai.response.completion_tokens": usage.get("completion_tokens", 0),
+                "agent_name": message.body.name or "unknown",
             })
             
-            # Memory operation for storing response
-            with self._tracer.start_as_current_span("memory_operation") as memory_span:
-                memory_span.set_attributes({
-                    "gen_ai.operation.name": "memory_operation",
-                    "gen_ai.system": "semantic_kernel",
-                    "gen_ai.memory.operation_type": "write",
-                    "gen_ai.memory.agent_id": "group_chat_manager",
-                    "gen_ai.memory.source_type": "user_response" if message.body.role == AuthorRole.USER else "agent_response",
-                    "gen_ai.memory.memory_type": "working",
-                    "gen_ai.memory.size_bytes": len(str(message.body)),
-                })
-                
-                if message.body.role != AuthorRole.USER:
-                    transfer_message = ChatMessageContent(
-                        role=AuthorRole.USER,
-                        content=f"Transferred to {message.body.name}",
-                    )
-                    self._chat_history.add_message(transfer_message)
-                    memory_span.add_event(
-                        "transfer_message_added",
-                        {
-                            "transfer_to": message.body.name,
-                            "message_content": transfer_message.content,
-                        }
-                    )
-                
-                self._chat_history.add_message(message.body)
-                
-                memory_span.add_event(
-                    "gen_ai.memory.snapshot",
-                    {
-                        "gen_ai.snapshot.id": f"response_{len(self._chat_history.messages)}",
-                        "gen_ai.snapshot.size_bytes": len(str(message.body)),
-                        "gen_ai.snapshot.fields": json.dumps(["content", "role", "name"]),
-                    }
+            # Add transfer message if needed
+            if message.body.role != AuthorRole.USER:
+                transfer_message = ChatMessageContent(
+                    role=AuthorRole.USER,
+                    content=f"Transferred to {message.body.name}",
                 )
-
+                self._chat_history.add_message(transfer_message)
+            
+            self._chat_history.add_message(message.body)
+            
             await self._determine_state_and_take_action(ctx.cancellation_token)
 
     async def _determine_state_and_take_action(self, cancellation_token: CancellationToken) -> None:
         """Determine the state of the group chat and take action accordingly with comprehensive tracing."""
         
-        with self._tracer.start_as_current_span("plan_task") as span:
+        with self._tracer.start_as_current_span("plan-task") as span:
             span.set_attributes({
                 # Required attributes
-                "gen_ai.operation.name": "plan_task",
                 "gen_ai.system": "semantic_kernel",
                 "gen_ai.planning.type": "orchestration",
                 "gen_ai.planning.complexity": "moderate",
@@ -660,9 +581,8 @@ class GroupChatManagerActor(ActorBase):
                 )
                 
                 # Get user input with interaction span
-                with self._tracer.start_as_current_span("agent_interaction") as user_span:
+                with self._tracer.start_as_current_span("agent-interaction") as user_span:
                     user_span.set_attributes({
-                        "gen_ai.operation.name": "agent_interaction",
                         "gen_ai.system": "semantic_kernel",
                         "gen_ai.interaction.type": "human_input",
                         "gen_ai.interaction.source_agent_id": "human",
@@ -677,9 +597,8 @@ class GroupChatManagerActor(ActorBase):
                     user_span.set_attribute("gen_ai.interaction.duration_ms", 0)  # Would be set by actual timing
                 
                 # Store user input
-                with self._tracer.start_as_current_span("memory_operation") as memory_span:
+                with self._tracer.start_as_current_span("memory-operation") as memory_span:
                     memory_span.set_attributes({
-                        "gen_ai.operation.name": "memory_operation",
                         "gen_ai.system": "semantic_kernel",
                         "gen_ai.memory.operation_type": "write",
                         "gen_ai.memory.agent_id": "group_chat_manager",
@@ -717,9 +636,8 @@ class GroupChatManagerActor(ActorBase):
                     result.result.metadata["filter_result_reason"] = result.reason
                     
                     # Final result callback with span
-                    with self._tracer.start_as_current_span("agent_interaction") as result_span:
+                    with self._tracer.start_as_current_span("agent-interaction") as result_span:
                         result_span.set_attributes({
-                            "gen_ai.operation.name": "agent_interaction",
                             "gen_ai.system": "semantic_kernel",
                             "gen_ai.interaction.type": "result_delivery",
                             "gen_ai.interaction.source_agent_id": "group_chat_manager",
@@ -759,9 +677,8 @@ class GroupChatManagerActor(ActorBase):
             
 
             # Publish request to next agent with interaction span
-            with self._tracer.start_as_current_span("agent_interaction") as request_span:
+            with self._tracer.start_as_current_span("agent-interaction") as request_span:
                 request_span.set_attributes({
-                    "gen_ai.operation.name": "agent_interaction",
                     "gen_ai.system": "semantic_kernel",
                     "gen_ai.interaction.type": "delegation",
                     "gen_ai.interaction.source_agent_id": "group_chat_manager",
@@ -867,10 +784,9 @@ class GroupChatOrchestration(OrchestrationBase[TIn, TOut]):
         too slow), it might send a request to the next agent before the other actors
         have the necessary context.
         """
-        with self._tracer.start_as_current_span("plan_task") as span:
+        with self._tracer.start_as_current_span("plan-task") as span:
             span.set_attributes({
                 # Required attributes
-                "gen_ai.operation.name": "plan_task",
                 "gen_ai.system": "semantic_kernel",
                 "gen_ai.planning.type": "orchestration",
                 "gen_ai.planning.complexity": "complex",
@@ -891,9 +807,8 @@ class GroupChatOrchestration(OrchestrationBase[TIn, TOut]):
             
             # Send start messages to all agents
             async def send_start_message(agent: Agent) -> None:
-                with self._tracer.start_as_current_span("agent_interaction") as agent_span:
+                with self._tracer.start_as_current_span("agent-interaction") as agent_span:
                     agent_span.set_attributes({
-                        "gen_ai.operation.name": "agent_interaction",
                         "gen_ai.system": "semantic_kernel",
                         "gen_ai.interaction.type": "broadcast",
                         "gen_ai.interaction.source_agent_id": "orchestrator",
@@ -929,9 +844,8 @@ class GroupChatOrchestration(OrchestrationBase[TIn, TOut]):
             )
 
             # Send the start message to the manager actor
-            with self._tracer.start_as_current_span("agent_interaction") as manager_span:
+            with self._tracer.start_as_current_span("agent-interaction") as manager_span:
                 manager_span.set_attributes({
-                    "gen_ai.operation.name": "agent_interaction",
                     "gen_ai.system": "semantic_kernel",
                     "gen_ai.interaction.type": "initiation",
                     "gen_ai.interaction.source_agent_id": "orchestrator",
@@ -964,10 +878,9 @@ class GroupChatOrchestration(OrchestrationBase[TIn, TOut]):
         result_callback: Callable[[DefaultTypeAlias], Awaitable[None]],
     ) -> None:
         """Register the actors and orchestrations with the runtime and add the required subscriptions with tracing."""
-        with self._tracer.start_as_current_span("plan_task") as span:
+        with self._tracer.start_as_current_span("plan-task") as span:
             span.set_attributes({
                 # Required attributes
-                "gen_ai.operation.name": "plan_task",
                 "gen_ai.system": "semantic_kernel",
                 "gen_ai.planning.type": "setup",
                 "gen_ai.planning.complexity": "moderate",
@@ -1007,9 +920,8 @@ class GroupChatOrchestration(OrchestrationBase[TIn, TOut]):
 
     async def _register_members(self, runtime: CoreRuntime, internal_topic_type: str) -> None:
         """Register the agents with tracing."""
-        with self._tracer.start_as_current_span("memory_operation") as span:
+        with self._tracer.start_as_current_span("memory-operation") as span:
             span.set_attributes({
-                "gen_ai.operation.name": "memory_operation",
                 "gen_ai.system": "semantic_kernel",
                 "gen_ai.memory.operation_type": "write",
                 "gen_ai.memory.agent_id": "orchestrator",
@@ -1046,9 +958,8 @@ class GroupChatOrchestration(OrchestrationBase[TIn, TOut]):
         result_callback: Callable[[DefaultTypeAlias], Awaitable[None]] | None = None,
     ) -> None:
         """Register the group chat manager with tracing."""
-        with self._tracer.start_as_current_span("memory_operation") as span:
+        with self._tracer.start_as_current_span("memory-operation") as span:
             span.set_attributes({
-                "gen_ai.operation.name": "memory_operation",
                 "gen_ai.system": "semantic_kernel",
                 "gen_ai.memory.operation_type": "write",
                 "gen_ai.memory.agent_id": "orchestrator",
@@ -1077,9 +988,8 @@ class GroupChatOrchestration(OrchestrationBase[TIn, TOut]):
 
     async def _add_subscriptions(self, runtime: CoreRuntime, internal_topic_type: str) -> None:
         """Add subscriptions with tracing."""
-        with self._tracer.start_as_current_span("memory_operation") as span:
+        with self._tracer.start_as_current_span("memory-operation") as span:
             span.set_attributes({
-                "gen_ai.operation.name": "memory_operation",
                 "gen_ai.system": "semantic_kernel",
                 "gen_ai.memory.operation_type": "write",
                 "gen_ai.memory.agent_id": "orchestrator",
@@ -1121,6 +1031,18 @@ class GroupChatOrchestration(OrchestrationBase[TIn, TOut]):
         """
         return f"{GroupChatManagerActor.__name__}_{internal_topic_type}"
 
-
+    async def _track_function_calls(self, message: ChatMessageContent) -> None:
+        """Track function calls in messages."""
+        if not hasattr(message, 'items') or not message.items:
+            return
+            
+        span = trace.get_current_span()
+        for item in message.items:
+            # Use Shipra's simpler pattern
+            if hasattr(item, 'plugin_name') and hasattr(item, 'function_name'):
+                span.add_event("function_call", {
+                    "plugin_name": item.plugin_name,
+                    "function_name": item.function_name,
+                })
 
 # endregion GroupChatOrchestration
